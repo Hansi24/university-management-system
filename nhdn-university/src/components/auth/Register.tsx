@@ -1,6 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
-import "../styles/Register.css";
 
 interface FormData {
   firstName: string;
@@ -31,7 +30,6 @@ const Register: React.FC = () => {
     profession: "",
     batch: "",
     courses: "",
-  
   });
 
   const handleChange = (
@@ -51,86 +49,188 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="register-container">
-      <h2>Course Registration Form</h2>
-      <form onSubmit={handleSubmit}>
-        {/*  Name in One Line */}
-        <label> Name</label>
-        <div className="input-group">
-          <input type="text" name="firstName" placeholder="First Name" onChange={handleChange} required />
-          <input type="text" name="middleName" placeholder="Middle Name" onChange={handleChange} />
-          <input type="text" name="lastName" placeholder="Last Name" onChange={handleChange} required />
-        </div>
-
-        {/* Birth Date & Gender in One Line */}
-        <div className="input-group">
-          <div className="input-half">
-            <label>Birth Date</label>
-            <input type="date" name="birthDate" onChange={handleChange} required />
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <div className="w-full max-w-lg bg-white p-8 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold text-center mb-6">Course Registration Form</h2>
+        <form onSubmit={handleSubmit}>
+          {/* Name in One Line */}
+          <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="col-span-1">
+              <label className="block text-sm font-medium">First Name</label>
+              <input
+                type="text"
+                name="firstName"
+                placeholder="First Name"
+                onChange={handleChange}
+                required
+                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+              />
+            </div>
+            <div className="col-span-1">
+              <label className="block text-sm font-medium">Middle Name</label>
+              <input
+                type="text"
+                name="middleName"
+                placeholder="Middle Name"
+                onChange={handleChange}
+                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+              />
+            </div>
+            <div className="col-span-1">
+              <label className="block text-sm font-medium">Last Name</label>
+              <input
+                type="text"
+                name="lastName"
+                placeholder="Last Name"
+                onChange={handleChange}
+                required
+                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+              />
+            </div>
           </div>
-          <div className="input-half">
-            <label>Gender</label>
-            <select name="gender" onChange={handleChange} required>
-              <option value="">Please Select</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-            </select>
+
+          {/* Birth Date & Gender in One Line */}
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <div>
+              <label className="block text-sm font-medium">Birth Date</label>
+              <input
+                type="date"
+                name="birthDate"
+                onChange={handleChange}
+                required
+                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Gender</label>
+              <select
+                name="gender"
+                onChange={handleChange}
+                required
+                className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+              >
+                <option value="">Please Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
           </div>
-        </div>
 
-        <label>Address</label>
-        <input type="text" name="address" placeholder="Street Address" onChange={handleChange} required />
+          {/* Address */}
+          <label className="block text-sm font-medium">Address</label>
+          <input
+            type="text"
+            name="address"
+            placeholder="Street Address"
+            onChange={handleChange}
+            required
+            className="mt-1 p-2 w-full border border-gray-300 rounded-md mb-6"
+          />
 
-        <label> Email</label>
-        <input type="email" name="email" placeholder="example@email.com" onChange={handleChange} required />
+          {/* Email */}
+          <label className="block text-sm font-medium">Email</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="example@email.com"
+            onChange={handleChange}
+            required
+            className="mt-1 p-2 w-full border border-gray-300 rounded-md mb-6"
+          />
 
-        <label>Phone Number</label>
-        <input type="tel" name="phone" placeholder="0000-000-0000" onChange={handleChange} />
+          {/* Phone Number */}
+          <label className="block text-sm font-medium">Phone Number</label>
+          <input
+            type="tel"
+            name="phone"
+            placeholder="0000-000-0000"
+            onChange={handleChange}
+            className="mt-1 p-2 w-full border border-gray-300 rounded-md mb-6"
+          />
 
-        {/* Role Selection */}
-        <label>Role</label>
-        <div className="role-selection">
-          <label>
-            <input type="radio" name="role" value="Student" checked={formData.role === "Student"} onChange={handleChange} />
-            Student
-          </label>
-          <label>
-            <input type="radio" name="role" value="Lecturer" checked={formData.role === "Lecturer"} onChange={handleChange} />
-            Lecturer
-          </label>
-        </div>
+          {/* Role Selection */}
+          <label className="block text-sm font-medium mb-2">Role</label>
+          <div className="flex gap-6 mb-6">
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="role"
+                value="Student"
+                checked={formData.role === "Student"}
+                onChange={handleChange}
+                className="mr-2"
+              />
+              Student
+            </label>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="role"
+                value="Lecturer"
+                checked={formData.role === "Lecturer"}
+                onChange={handleChange}
+                className="mr-2"
+              />
+              Lecturer
+            </label>
+          </div>
 
-        {/* Conditionally Render Batch Field for Student */}
-        {formData.role === "Student" && (
-          <>
-            <label>Batch</label>
-            <input type="text" name="batch" placeholder="Enter Batch" onChange={handleChange} required />
-          </>
-        )}
+          {/* Conditionally Render Batch Field for Student */}
+          {formData.role === "Student" && (
+            <>
+              <label className="block text-sm font-medium">Batch</label>
+              <input
+                type="text"
+                name="batch"
+                placeholder="Enter Batch"
+                onChange={handleChange}
+                required
+                className="mt-1 p-2 w-full border border-gray-300 rounded-md mb-6"
+              />
+            </>
+          )}
 
-        {/* Conditionally Render Profession Field for Lecturer */}
-        {formData.role === "Lecturer" && (
-          <>
-            <label>Profession</label>
-            <select name="profession" onChange={handleChange} required>
-              <option value="">Please Select</option>
-              <option value="Professor">Professor</option>
-              <option value="Assistant Professor">Assistant Professor</option>
-              <option value="Senior Lecturer">Senior Lecturer</option>
-              <option value="Lecturer">Lecturer</option>
-            </select>
-          </>
-        )}
+          {/* Conditionally Render Profession Field for Lecturer */}
+          {formData.role === "Lecturer" && (
+            <>
+              <label className="block text-sm font-medium">Profession</label>
+              <select
+                name="profession"
+                onChange={handleChange}
+                required
+                className="mt-1 p-2 w-full border border-gray-300 rounded-md mb-6"
+              >
+                <option value="">Please Select</option>
+                <option value="Professor">Professor</option>
+                <option value="Assistant Professor">Assistant Professor</option>
+                <option value="Senior Lecturer">Senior Lecturer</option>
+                <option value="Lecturer">Lecturer</option>
+              </select>
+            </>
+          )}
 
-        <label>Courses</label>
-        <select name="courses" onChange={handleChange} required>
-          <option value="">Please Select</option>
-          <option value="Computer Science">Computer Science</option>
-          <option value="Civil Engineering">Civil Engineering</option>
-        </select>
+          {/* Courses Selection */}
+          <label className="block text-sm font-medium">Courses</label>
+          <select
+            name="courses"
+            onChange={handleChange}
+            required
+            className="mt-1 p-2 w-full border border-gray-300 rounded-md mb-6"
+          >
+            <option value="">Please Select</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Civil Engineering">Civil Engineering</option>
+          </select>
 
-        <button type="submit" className="submit-button">Submit</button>
-      </form>
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

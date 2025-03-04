@@ -6,6 +6,8 @@ import Register from './components/auth/Register';
 import EventBoard from './components/pages/EventDashboard';
 import CreatePost from './components/pages/CreatePost';
 import ResourceAvailability from './components/pages/ResourceAvailability';
+import TimeTable from './components/pages/TimeTable';
+import BookResources from './components/pages/BookResources';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
           <Route path="/EventBoard" element={<EventBoard />} />
           <Route path="/CreatePost" element={<CreatePost/>}/>
           <Route path="/ResourceAvailability" element={<ResourceAvailability/>}/>
+          <Route path="/TimeTable" element={<TimeTable/>}/>
+          <Route path="/BookResources" element={<BookResources/>}/>
         </Routes>
       </div>
     </Router>

@@ -1,6 +1,6 @@
-import React from "react";
 import SideBar from "../layout/SideBar";
 import TitleBar from "../layout/TitleBar";
+import backgroundImage from "../../assets/background.jpeg";
 
 const EventBoard = () => {
   const userInfo = {
@@ -19,7 +19,7 @@ const EventBoard = () => {
   };
 
   return (
-    <div className="flex w-full min-h-screen bg-gray-100">
+    <div className="flex w-full min-h-screen bg-gray-100" style={{ backgroundImage: `url(${backgroundImage})` }}>
       <SideBar />
       <div className="flex flex-col flex-grow">
         <TitleBar />
@@ -40,7 +40,7 @@ const EventBoard = () => {
               </div>
             </div>
           </div>
-          <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+          <div className="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-md">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 bg-gray-400 rounded-full"></div>
