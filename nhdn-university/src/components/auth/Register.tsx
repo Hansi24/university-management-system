@@ -1,5 +1,8 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
+import backgroundImage from "../../assets/background.jpeg";
+import ASideBar from "../pages/Admin/ASideBar";
+import TitleBar from "../layout/TitleBar";
 
 interface FormData {
   firstName: string;
@@ -49,8 +52,12 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-lg bg-white p-8 rounded-lg shadow-lg">
+    <div className="flex w-full min-h-screen bg-gray-50" style={{ backgroundImage: `url(${backgroundImage})` }}>
+    <ASideBar />
+    <div className="flex flex-col flex-grow">
+      <TitleBar />
+      <div className="flex flex-grow justify-center items-center p-6">
+      <div className="w-1000 bg-white p-8 rounded-xl shadow-xl text-black space-y-6">
         <h2 className="text-2xl font-bold text-center mb-6">Course Registration Form</h2>
         <form onSubmit={handleSubmit}>
           {/* Name in One Line */}
@@ -231,6 +238,8 @@ const Register: React.FC = () => {
           </button>
         </form>
       </div>
+      </div>
+    </div>
     </div>
   );
 };

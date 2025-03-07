@@ -1,12 +1,12 @@
-import React from "react";
-import SideBar from "../layout/SideBar";
-import TitleBar from "../layout/TitleBar";
 
-const TimeTable = () => {
+import TitleBar from "../../layout/TitleBar";
+import ASideBar from "./ASideBar";
+
+const ADashboard = () => {
   
   return (
     <div className="flex w-full min-h-screen bg-gray-100">
-      <SideBar />
+      <ASideBar />
       <div className="flex flex-col flex-grow">
         <TitleBar />
         
@@ -17,4 +17,4 @@ const TimeTable = () => {
   );
 };
 
-export default TimeTable;
+export default ADashboard;
