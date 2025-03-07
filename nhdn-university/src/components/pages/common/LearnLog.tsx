@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { FaBook, FaGraduationCap, FaChalkboardTeacher } from "react-icons/fa";
-import SideBar from "../layout/SideBar";
-import TitleBar from "../layout/TitleBar";
+import SideBar from "../../layout/SideBar";
+import TitleBar from "../../layout/TitleBar";
 
 const LearnLog = () => {
   const navigate = useNavigate();
