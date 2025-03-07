@@ -16,32 +16,81 @@ import UserDetails from './components/pages/Admin/UserDeatails';
 import CourseDetails from './components/pages/Admin/CourseDetails';
 import EnrollSem from './components/pages/EnrollSem';
 import CreateAssignment from './components/pages/CreateAssignment';
+import { TokenProvider } from './context/TokenContext';
+import { CommonProvider } from './context/commonContext';
+import { ToastProvider } from './context/ToastContext';
+import { Suspense } from 'react';
+import { Spinner } from './reuse/Spinner';
+import ProtectedRoute from './ProtectedRoute';
+import { AdminType, ROLE_TYPES, StudentType } from './enums/roleEnums';
 
-function App() {
+
+const App: React.FC = () => {
   return (
-    <Router>
-      <div>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/EventBoard" element={<EventBoard />} />
-          <Route path="/CreatePost" element={<CreatePost/>}/>
-          <Route path="/ResourceAvailability" element={<ResourceAvailability/>}/>
-          <Route path="/TimeTable" element={<TimeTable/>}/>
-          <Route path="/BookResources" element={<BookResources/>}/>
-          <Route path="/LearnLog" element={<LearnLog/>}/>
-          <Route path="/semester/:id" element={<Semester />} />
-          <Route path="/module/:id" element={<Module />} />
-          <Route path="/AdminDashboard" element={<ADashboard />} />
-          <Route path="/UserDetails" element={<UserDetails />} />
-          <Route path="/CourseDetails" element={<CourseDetails />} />
-          <Route path="/EnrollSem" element={<EnrollSem />} />
-          <Route path="/CreateAssignment" element={<CreateAssignment />} /> 
-        </Routes>
-      </div>
-    </Router>
+    <TokenProvider>
+      <CommonProvider>
+        <ToastProvider>
+        <Spinner />
+          <Router>
+            <Suspense fallback={<Spinner />}>
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+
+
+                {/* Role-Based Protected Routes */}
+                <Route element={<ProtectedRoute allowedRoles={[ROLE_TYPES.LECTURER]}/>}>
+                  <Route path="/CreateAssignment" element={<CreateAssignment />} /> 
+                </Route>
+
+                <Route element={<ProtectedRoute allowedRoles={[ROLE_TYPES.STUDENT]}/>}>
+                  <Route path="/EnrollSem" element={<EnrollSem />} />
+                </Route>
+                
+                <Route element={<ProtectedRoute allowedRoles={[ROLE_TYPES.ADMIN]} allowedTypes={[AdminType.ACADEMIC]}/>}>
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/AdminDashboard" element={<ADashboard />} />
+                  <Route path="/UserDetails" element={<UserDetails />} />
+                  <Route path="/CourseDetails" element={<CourseDetails />} />
+                </Route>
+
+                <Route element={<ProtectedRoute allowedRoles={[ROLE_TYPES.ADMIN]}/>}>
+                  <Route path="/AdminDashboard" element={<ADashboard />} />
+                </Route>
+
+                <Route element={<ProtectedRoute allowedRoles={[ROLE_TYPES.LECTURER, ROLE_TYPES.STUDENT , ROLE_TYPES.ADMIN]} allowedTypes={[StudentType.REP, AdminType.EVENT]}/>}>
+                  <Route path="/CreatePost" element={<CreatePost/>}/>
+                  <Route path="/ResourceAvailability" element={<ResourceAvailability/>}/>
+                </Route>
+
+                <Route element={<ProtectedRoute allowedRoles={[ROLE_TYPES.LECTURER, ROLE_TYPES.STUDENT , ROLE_TYPES.ADMIN]} allowedTypes={[AdminType.ACADEMIC, AdminType.EVENT]}/>}>
+                  <Route path="/TimeTable" element={<TimeTable/>}/>
+                </Route>
+
+                <Route element={<ProtectedRoute allowedRoles={[ROLE_TYPES.LECTURER, ROLE_TYPES.STUDENT]} allowedTypes={[StudentType.REP]} />}>
+                  <Route path="/CreatePost" element={<CreatePost />} />
+                  <Route path="/ResourceAvailability" element={<ResourceAvailability />} />
+                  <Route path="/BookResources" element={<BookResources />} />
+                </Route>
+
+                <Route element={<ProtectedRoute allowedRoles={[ROLE_TYPES.LECTURER, ROLE_TYPES.STUDENT]} />}>
+                  <Route path="/event-dashboard" element={<EventBoard />} />
+                  <Route path="/LearnLog" element={<LearnLog />} />
+                  <Route path="/semester/:id" element={<Semester />} />
+                  <Route path="/module/:id" element={<Module />} />
+                </Route>
+                
+
+                {/* Unauthorized Page */}
+                <Route path="/unauthorized" element={<h2>Access Denied</h2>} />
+              </Routes>
+            </Suspense>
+          </Router>
+        </ToastProvider>
+      </CommonProvider>
+    </TokenProvider>
   );
-}
+};
 
 export default App;
