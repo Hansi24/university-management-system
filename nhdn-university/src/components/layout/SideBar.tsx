@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const SideBar = () => {
   return (
-    <div className="w-[350px] h-screen bg-gray-900 text-white shadow-md flex flex-col">
+    <div className="w-[250px] h-screen sticky top-0 bg-gray-900 text-white shadow-md flex flex-col">
       {/* Profile Section */}
       <div className="text-center py-6 border-b border-gray-700">
         <div className="w-16 h-16 bg-gray-500 rounded-full mx-auto"></div>
@@ -24,7 +24,7 @@ const SideBar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/#" className="block px-4 py-2 hover:bg-gray-700 rounded">
+            <Link to="/TimeTable" className="block px-4 py-2 hover:bg-gray-700 rounded">
               Time Table
             </Link>
           </li>
@@ -32,24 +32,29 @@ const SideBar = () => {
           <li className="text-gray-400 text-sm mt-4 uppercase">Resources</li>
           <li>
             <Link to="/ResourceAvailability" className="block px-4 py-2 hover:bg-gray-700 rounded">
-              Check Availability
+              Request Resources
             </Link>
           </li>
           <li>
-            <Link to="#" className="block px-4 py-2 hover:bg-gray-700 rounded">
-              Request Resource
+            <Link to="/BookResources" className="block px-4 py-2 hover:bg-gray-700 rounded">
+              Requested Resources
             </Link>
           </li>
 
           <li className="text-gray-400 text-sm mt-4 uppercase">Academic</li>
           <li>
-            <Link to="#" className="block px-4 py-2 hover:bg-gray-700 rounded">
-              Exam
+            <Link to="/Learnlog" className="block px-4 py-2 hover:bg-gray-700 rounded">
+              LearnLog
             </Link>
           </li>
           <li>
             <Link to="#" className="block px-4 py-2 hover:bg-gray-700 rounded">
               Assignments
+            </Link>
+          </li>
+          <li>
+            <Link to="/EnrollSem" className="block px-4 py-2 hover:bg-gray-700 rounded">
+              Enroll
             </Link>
           </li>
         </ul>
