@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaBook } from "react-icons/fa";
-import SideBar from "../layout/SideBar";
-import TitleBar from "../layout/TitleBar";
+import SideBar from "../../layout/SideBar";
+import TitleBar from "../../layout/TitleBar";
 
 const EnrollSem = () => {
   const navigate = useNavigate();

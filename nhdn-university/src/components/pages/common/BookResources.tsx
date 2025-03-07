@@ -1,8 +1,8 @@
-import SideBar from "../layout/SideBar";
-import TitleBar from "../layout/TitleBar";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import backgroundImage from "../../assets/background.jpeg";
+import backgroundImage from "../../../assets/background.jpeg";
+import SideBar from "../../layout/SideBar";
+import TitleBar from "../../layout/TitleBar";
 
 const BookResources = () => {
   const location = useLocation();

@@ -1,6 +1,7 @@
 import { useState } from "react";
-import TitleBar from "../../layout/TitleBar";
-import ASideBar from "./ASideBar";
+import TitleBar from "../../../layout/TitleBar";
+import ASideBar from "../ASideBar";
+
 
 export default function UserDetails() {
   const [searchEnabled, setSearchEnabled] = useState(false);

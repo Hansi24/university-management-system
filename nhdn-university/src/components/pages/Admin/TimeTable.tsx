@@ -1,6 +1,6 @@
 import React from "react";
-import SideBar from "../layout/SideBar";
-import TitleBar from "../layout/TitleBar";
+import SideBar from "../../layout/SideBar";
+import TitleBar from "../../layout/TitleBar";
 
 const TimeTable = () => {
   

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import SideBar from "../layout/SideBar";
-import TitleBar from "../layout/TitleBar";
-import backgroundImage from '../../assets/background.jpeg';
+import backgroundImage from '../../../assets/background.jpeg';
 import { useNavigate } from "react-router-dom";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import SideBar from "../../layout/SideBar";
+import TitleBar from "../../layout/TitleBar";
 
 const resourceData: { [key: string]: string[] } = {
   Ground: ["A - Ground", "B - Ground"],

@@ -1,11 +1,11 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft, FaBook } from "react-icons/fa";
-import SideBar from "../layout/SideBar";
-import TitleBar from "../layout/TitleBar";
-import mathematicsInComputing from "../../assets/mathematics_in_computing.jpeg"; 
-import dataStructureAlgorithm from "../../assets/data structure algorithm.jpeg";
-import databaseManagement from "../../assets/databaseManagement.webp";  
-import softwareEngineering from "../../assets/softwareEngineering.jpeg";
+import mathematicsInComputing from "../../../assets/mathematics_in_computing.jpeg"; 
+import dataStructureAlgorithm from "../../../assets/data structure algorithm.jpeg";
+import databaseManagement from "../../../assets/databaseManagement.webp";  
+import softwareEngineering from "../../../assets/softwareEngineering.jpeg";
+import SideBar from "../../layout/SideBar";
+import TitleBar from "../../layout/TitleBar";
 
 const Semester = () => {
   const { id } = useParams();

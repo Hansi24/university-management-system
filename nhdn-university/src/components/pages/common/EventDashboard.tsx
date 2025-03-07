@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { FaChevronLeft, FaChevronRight, FaUserCircle } from "react-icons/fa";
 import { MdEvent, MdLocationOn, MdEmail, MdPhone } from "react-icons/md";
-import SideBar from "../layout/SideBar";
-import TitleBar from "../layout/TitleBar";
-import backgroundImage from "../../assets/background.jpeg";
-import campusLogo from "../../assets/university-logo.png";
+import backgroundImage from "../../../assets/background.jpeg";
+import campusLogo from "../../../assets/university-logo.png";
+import SideBar from "../../layout/SideBar";
+import TitleBar from "../../layout/TitleBar";
 
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 

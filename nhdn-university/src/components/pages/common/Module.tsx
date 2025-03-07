@@ -1,7 +1,8 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft, FaBookOpen, FaClipboardCheck } from "react-icons/fa";
-import SideBar from "../layout/SideBar";
-import TitleBar from "../layout/TitleBar";
+import SideBar from "../../layout/SideBar";
+import TitleBar from "../../layout/TitleBar";
+
 
 const Module = () => {
   const { id } = useParams();

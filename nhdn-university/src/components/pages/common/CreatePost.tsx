@@ -1,8 +1,8 @@
 import React, { useState, ChangeEvent } from "react";
-import SideBar from "../layout/SideBar";
-import TitleBar from "../layout/TitleBar";
 import { FaCamera, FaTrash } from "react-icons/fa";
-import backgroundImage from "../../assets/background.jpeg";
+import backgroundImage from "../../../assets/background.jpeg";
+import SideBar from "../../layout/SideBar";
+import TitleBar from "../../layout/TitleBar";
 
 interface Post {
   title: string;

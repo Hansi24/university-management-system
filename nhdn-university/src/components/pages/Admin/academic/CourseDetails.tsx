@@ -1,7 +1,7 @@
 import { useState } from "react";
-import TitleBar from "../../layout/TitleBar";
-import ASideBar from "./ASideBar";
 import { FaPlus, FaTrash } from "react-icons/fa";
+import TitleBar from "../../../layout/TitleBar";
+import ASideBar from "../ASideBar";
 
 interface Module {
   name: string;

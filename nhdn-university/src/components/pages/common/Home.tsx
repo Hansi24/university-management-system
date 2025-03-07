@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import campusLogo from '../../assets/university-logo.png'; 
-import backgroundImage from '../../assets/background.webp';
+import campusLogo from '../../../assets/university-logo.png'; 
+import backgroundImage from '../../../assets/background.jpeg';
 
 const Home: React.FC = () => {
   return (
