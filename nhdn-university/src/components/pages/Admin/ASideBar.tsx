@@ -3,7 +3,7 @@ import { Home, UserPlus, Calendar, Users, FileText, BookOpen, Clipboard, LogOut 
 
 const ASideBar = () => {
   return (
-    <div className="w-[250px] h-screen sticky top-0 bg-gray-900 text-white shadow-lg flex flex-col">
+    <div className="w-[300px] h-screen sticky top-0 bg-gray-900 text-white shadow-lg flex flex-col">
       {/* Profile Section */}
       <div className="text-center py-6 border-b border-gray-700">
         <div className="w-20 h-20 bg-gray-500 rounded-full mx-auto"></div>

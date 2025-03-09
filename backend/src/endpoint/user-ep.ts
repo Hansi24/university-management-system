@@ -42,6 +42,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
     try {
         let profilePic = "";
         let regId = "";
+        const userType = type || (role === Role.STUDENT ? StudentType.STUDENT : LecturerType.LECTURER);
 
         // Handle profile picture upload (assuming Cloudinary)
         if (req.file) {
@@ -58,9 +59,9 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
             if (!batch || !courseId) {
                 return Util.sendError(res, "Batch, Course ID are required for students", 400);
             }
-            if (!Object.values(StudentType).includes(type)) {
-                return Util.sendError(res, "Invalid student type", 400);
-            }
+            // if (!Object.values(StudentType).includes(type)) {
+            //     return Util.sendError(res, "Invalid student type", 400);
+            // }
 
             // Reg ID format: course 1st letter + batch last 2 digits + length of students + 1
             const studentCount = await User.countDocuments({ role: Role.STUDENT });
@@ -72,9 +73,9 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
             if (!teachingModules || !courseId) {
                 return Util.sendError(res, "Teaching Modules and Course ID are required for lecturers", 400);
             }
-            if (!Object.values(LecturerType).includes(type)) {
-                return Util.sendError(res, "Invalid lecturer type", 400);
-            }
+            // if (!Object.values(LecturerType).includes(type)) {
+            //     return Util.sendError(res, "Invalid lecturer type", 400);
+            // }
 
             // Reg ID format: course 1st letter + module 1st letter + length of lecturers + 1
             const lecturerCount = await User.countDocuments({ role: Role.LECTURER });
@@ -83,7 +84,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
 
         // Role-based processing for Admin
         if (role === Role.ADMIN) {
-            if (!Object.values(AdminType).includes(type)) {
+            if (!Object.values(AdminType).includes(userType)) {
                 return Util.sendError(res, "Invalid admin type", 400);
             }
 
@@ -100,7 +101,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
             password,
             phone,
             role,
-            type,
+            type:userType,
             batch: role === Role.STUDENT ? batch : undefined,
             courseId: role !== Role.ADMIN ? courseId : undefined,
             teachingModules: role === Role.LECTURER ? teachingModules : undefined,
