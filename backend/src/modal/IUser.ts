@@ -1,4 +1,4 @@
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 import { AdminType, Gender, LecturerType, Role, StudentType } from "../enums/UserEnums";
 
 export interface IUser {
@@ -9,8 +9,8 @@ export interface IUser {
     batch?: number; // Only for students
     courseId?: string; // For students & lecturers
     semester?: string[]; // Only for students
-    enrolledModules?: string[]; // Only for students
-    teachingModules?: string[]; // Only for lecturers
+    enrolledModules?: EnrolledModule[]; // Only for students
+    teachingModules?: Types.ObjectId[]; // Only for lecturers
     regId: string;
     gender: Gender;
     address: {
@@ -24,7 +24,16 @@ export interface IUser {
     password: string;
     profilePic?: string;
 }
+interface EnrolledModule {
+  moduleId: Types.ObjectId;
+  status: EnrolledModuleStatus;
+}
 
+export enum EnrolledModuleStatus {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED'
+}
  
 export interface ILoginUser {
     regId: string;

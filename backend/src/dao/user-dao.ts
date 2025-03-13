@@ -97,3 +97,34 @@ export const getAllUsersDao = async () => {
       throw error;
   }
 };
+
+export const changePasswordDao = async (userId: Types.ObjectId, oldPassword: string, newPassword: string) => {
+  try {
+      const existingUser = await User.findById(userId);
+      if (!existingUser) {
+          throw new Error("User not found");
+      }
+      const isPasswordValid = await Helper.comparePassword(oldPassword, existingUser.password);
+      if (!isPasswordValid) {
+          throw new Error("Invalid password");
+      }
+      const hashedPassword = await Helper.hashPassword(newPassword);
+      const updatedUser = await User.findByIdAndUpdate(userId, { password: hashedPassword }, { new: true });
+      return { user: updatedUser };
+  } catch (error) {
+      throw error;
+  }
+};
+export const resetPasswordDao = async (email:string, newPassword: string) => {
+  try {
+      const existingUser = await User.findOne({email: email});
+      if (!existingUser) {
+          throw new Error("User not found");
+      }
+      const hashedPassword = await Helper.hashPassword(newPassword);
+      const updatedUser = await User.findByIdAndUpdate(existingUser._id, { password: hashedPassword }, { new: true });
+      return { user: updatedUser };
+  } catch (error) {
+      throw error;
+  }
+};

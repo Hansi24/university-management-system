@@ -16,6 +16,7 @@ import { Server as SocketIO } from 'socket.io';
 import Stripe from 'stripe';
 import { Types } from 'mongoose';
 import courseRoutes from './routes/course-routes';
+import resourceRoutes from './routes/resource-routes';
 // import statusRoutes from './routes/status-routes';
 
 dotenv.config();
@@ -75,6 +76,7 @@ app.use('/uploads', express.static('uploads'));
 app.use('/auth', userRoutes);
 app.use('/api', Helper.verifyToken);
 app.use('/api/course', courseRoutes);
+app.use('/api/resource', resourceRoutes)
 // app.use('/api/food', foodRoutes);
 // app.use('/api/cart', cartRoutes);
 // app.use('/api/order', orderRoutes);

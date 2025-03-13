@@ -6,7 +6,8 @@ declare global {
   namespace Express {
     interface Request {
       user: { userId: Types.ObjectId;
-        userRole: string /* Add other properties if necessary */ };
+        userRole: string /* Add other properties if necessary */
+        userType: string };
     }
   }
 }

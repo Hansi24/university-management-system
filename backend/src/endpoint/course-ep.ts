@@ -2,16 +2,17 @@ import { NextFunction, Request, Response } from 'express';
 import { Util } from '../utils/util';
 import { createCourseDao, deleteCourseDao, enrollStudentDao, getAllCoursesDao, getCourseByIdDao, unEnrollStudentDao, updateCourseDao } from '../dao/course-dao';
 import exp from 'constants';
+import { AdminType, Role } from '../enums/UserEnums';
 
 // Create new user
 export const createCourse = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { name, code, semesters } = req.body;
+    console.log(name, code, semesters);
     try {
-        const adminId = req.user.userId;
-        if (req.user.userRole !== "admin") {
+        if (req.user.userRole !== Role.ADMIN && req.user.userRole !== AdminType.ACADEMIC) {
             return Util.sendError(res, "You are not authorized to create course", 401);
         }
-        const courseDetails = await createCourseDao({ name, code, semesters }, adminId);
+        const courseDetails = await createCourseDao({ name, code, semesters });
         return Util.sendSuccess(res, courseDetails, "course created successfully");
     } catch (error) {
         next(error);
@@ -62,9 +63,10 @@ export const deleteCourse = async (req: Request, res: Response, next: NextFuncti
 
 export const enrollStudent = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
+        const courseId = req.params.courseId;
         const moduleId = req.params.moduleId;
         const studentId = req.user.userId;
-        const course = await enrollStudentDao(moduleId, studentId);
+        const course = await enrollStudentDao(courseId, moduleId, studentId);
         return Util.sendSuccess(res, course, "You have been enrolled in the module");
     } catch (error) {
         next(error);
@@ -74,8 +76,9 @@ export const enrollStudent = async (req: Request, res: Response, next: NextFunct
 export const unEnrollStudent = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const courseId = req.params.courseId;
+        const moduleId = req.params.moduleId;
         const studentId = req.user.userId;
-        const course = await unEnrollStudentDao(courseId, studentId);
+        const course = await unEnrollStudentDao(courseId, moduleId, studentId);
         return Util.sendSuccess(res, course, "You have been unenrolled from the course");
     } catch (error) {
         next(error);

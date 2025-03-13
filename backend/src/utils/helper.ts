@@ -9,7 +9,7 @@ import { Request, Response, NextFunction } from 'express';
 interface JwtPayload {
     userId: Types.ObjectId;
     userRole: string;
-    type?: string;
+    userType: string;
 }
 declare global {
     namespace Express {
@@ -17,13 +17,14 @@ declare global {
             user: {
                 userId: Types.ObjectId;
                 userRole: string;
+                userType: string;
             };
         }
     }
 }
 export namespace Helper{
-    export const generateToken = (userId: Types.ObjectId, userRole:string, type:string): string => {
-        const payload: JwtPayload = { userId, userRole, type };
+    export const generateToken = (userId: Types.ObjectId, userRole:string, userType:string): string => {
+        const payload: JwtPayload = { userId, userRole, userType };
         const secretKey = config.JWT_SECRET;
         return jwt.sign(payload, secretKey, { expiresIn: config.JWT_EXPIRES_IN });
     };
@@ -39,8 +40,8 @@ export namespace Helper{
 
         try {
             const tokenWithoutBearer = token.startsWith('Bearer ') ? token.slice(7) : token;
-            const decoded = jwt.verify(tokenWithoutBearer, config.JWT_SECRET) as { userId: Types.ObjectId, userRole: string };
-            req.user = { userId: decoded.userId , userRole: decoded.userRole};
+            const decoded = jwt.verify(tokenWithoutBearer, config.JWT_SECRET) as { userId: Types.ObjectId, userRole: string, userType: string };
+            req.user = { userId: decoded.userId , userRole: decoded.userRole, userType: decoded.userType};
             next();
         } catch (error) {
             res.status(400).json({ error: 'Invalid or expired token' });

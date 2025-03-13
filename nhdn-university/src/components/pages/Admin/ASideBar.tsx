@@ -1,7 +1,12 @@
 import { Link } from "react-router-dom";
 import { Home, UserPlus, Calendar, Users, FileText, BookOpen, Clipboard, LogOut } from "lucide-react";
+import { useTokenContext } from "../../../context/TokenContext";
 
 const ASideBar = () => {
+  const { clearToken } = useTokenContext();
+  const handleLogout = () => {
+    clearToken();
+  };
   return (
     <div className="w-[300px] h-screen sticky top-0 bg-gray-900 text-white shadow-lg flex flex-col">
       {/* Profile Section */}
@@ -61,7 +66,7 @@ const ASideBar = () => {
 
       {/* Logout Button */}
       <div className="p-4 border-t border-gray-700">
-        <Link to="#" className="flex items-center gap-3 px-4 py-3 bg-red-600 hover:bg-red-700 rounded-md text-white">
+        <Link to="/login" onClick={handleLogout} className="flex items-center gap-3 px-4 py-3 bg-red-600 hover:bg-red-700 rounded-md text-white">
           <LogOut size={20} /> Logout
         </Link>
       </div>

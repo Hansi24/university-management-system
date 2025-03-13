@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import TitleBar from "../../../layout/TitleBar";
 import ASideBar from "../ASideBar";
+import { CommonContext } from "../../../../context/commonContext";
+import { useMessagePopup } from "../../../../context/useMessagePopup";
+import { AppResponse } from "../../../../models/Response";
+import { CourseService } from "../../../../service/courseService";
 
 interface Module {
   name: string;
@@ -24,17 +28,26 @@ export default function CourseDetails() {
   const [newCourse, setNewCourse] = useState<Course>({
     name: "",
     code: "",
-    semesters: Array.from({ length: 4 }, (_, i) => ({ semesterNumber: i + 1, modules: [] })),
+    semesters: Array.from({ length: 4 }, (_, i) => ({
+      semesterNumber: i + 1,
+      modules: [],
+    })),
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentSemesterIndex, setCurrentSemesterIndex] = useState<number | null>(null);
+  const [currentSemesterIndex, setCurrentSemesterIndex] = useState<
+    number | null
+  >(null);
   const [moduleInputs, setModuleInputs] = useState<Module[]>([]);
+  const { setSpinnerOpen } = useContext(CommonContext);
+  const { showErrorMessage, showSuccessMessage } = useMessagePopup();
 
   const handleOpenModal = (semesterIndex: number) => {
     setCurrentSemesterIndex(semesterIndex);
     const existingModules = [...newCourse.semesters[semesterIndex].modules];
-    setModuleInputs(existingModules.length > 0 ? existingModules : [{ name: "", code: "" }]);
+    setModuleInputs(
+      existingModules.length > 0 ? existingModules : [{ name: "", code: "" }]
+    );
     setIsModalOpen(true);
   };
 
@@ -49,7 +62,11 @@ export default function CourseDetails() {
     }
   };
 
-  const handleModuleChange = (index: number, field: keyof Module, value: string) => {
+  const handleModuleChange = (
+    index: number,
+    field: keyof Module,
+    value: string
+  ) => {
     const updatedModules = [...moduleInputs];
     updatedModules[index][field] = value;
     setModuleInputs(updatedModules);
@@ -63,14 +80,37 @@ export default function CourseDetails() {
     setIsModalOpen(false);
   };
 
-  const handleCreateCourse = () => {
+  const handleCreateCourse = async (e: React.FormEvent) => {
     if (newCourse.name && newCourse.code) {
-      setCourses([...courses, newCourse]);
-      setNewCourse({
-        name: "",
-        code: "",
-        semesters: Array.from({ length: 4 }, (_, i) => ({ semesterNumber: i + 1, modules: [] })),
-      });
+      e.preventDefault();
+      setSpinnerOpen(true);
+      try {
+        const response: AppResponse<any> = await CourseService.createCourse(
+          newCourse
+        );
+        if (response.success) {
+          showSuccessMessage("course Created successfully");
+          console.log(response.data.token);
+          setCourses([...courses, newCourse]);
+          setNewCourse({
+            name: "",
+            code: "",
+            semesters: Array.from({ length: 4 }, (_, i) => ({
+              semesterNumber: i + 1,
+              modules: [],
+            })),
+          });
+        } else {
+          showErrorMessage(response.message || "course created failed");
+        }
+      } catch (error) {
+        console.log("Error happened in", error);
+        showErrorMessage("An error occurred. Please try again.");
+      } finally {
+        setSpinnerOpen(false);
+      }
+    }else{
+      showErrorMessage("Please fill out all required fields");
     }
   };
 
@@ -87,19 +127,28 @@ export default function CourseDetails() {
               type="text"
               placeholder="Course Name"
               value={newCourse.name}
-              onChange={(e) => setNewCourse({ ...newCourse, name: e.target.value })}
+              onChange={(e) =>
+                setNewCourse({ ...newCourse, name: e.target.value })
+              }
               className="p-2 border rounded-md w-full mt-2"
             />
             <input
               type="text"
               placeholder="Course Code"
               value={newCourse.code}
-              onChange={(e) => setNewCourse({ ...newCourse, code: e.target.value })}
+              onChange={(e) =>
+                setNewCourse({ ...newCourse, code: e.target.value })
+              }
               className="p-2 border rounded-md w-full mt-2"
             />
             {newCourse.semesters.map((semester, index) => (
-              <div key={index} className="mt-4 p-2 border rounded-md bg-gray-50">
-                <h4 className="font-semibold">Semester {semester.semesterNumber}</h4>
+              <div
+                key={index}
+                className="mt-4 p-2 border rounded-md bg-gray-50"
+              >
+                <h4 className="font-semibold">
+                  Semester {semester.semesterNumber}
+                </h4>
                 <button
                   onClick={() => handleOpenModal(index)}
                   className="mt-2 px-4 py-1 bg-blue-500 text-white rounded-md"
@@ -108,7 +157,9 @@ export default function CourseDetails() {
                 </button>
                 <ul className="mt-2">
                   {semester.modules.map((mod, modIndex) => (
-                    <li key={modIndex} className="text-gray-700">{mod.name} ({mod.code})</li>
+                    <li key={modIndex} className="text-gray-700">
+                      {mod.name} ({mod.code})
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -134,30 +185,46 @@ export default function CourseDetails() {
                   type="text"
                   placeholder="Module Code"
                   value={mod.code}
-                  onChange={(e) => handleModuleChange(index, "code", e.target.value)}
+                  onChange={(e) =>
+                    handleModuleChange(index, "code", e.target.value)
+                  }
                   className="p-2 border rounded-md flex-1"
                 />
                 <input
                   type="text"
                   placeholder="Module Name"
                   value={mod.name}
-                  onChange={(e) => handleModuleChange(index, "name", e.target.value)}
+                  onChange={(e) =>
+                    handleModuleChange(index, "name", e.target.value)
+                  }
                   className="p-2 border rounded-md flex-1"
                 />
-                <button onClick={handleAddModuleInput} className="p-2 bg-blue-500 text-white rounded-md">
+                <button
+                  onClick={handleAddModuleInput}
+                  className="p-2 bg-blue-500 text-white rounded-md"
+                >
                   <FaPlus />
                 </button>
                 {moduleInputs.length > 1 && (
-                  <button onClick={() => handleRemoveModuleInput(index)} className="p-2 bg-red-500 text-white rounded-md">
+                  <button
+                    onClick={() => handleRemoveModuleInput(index)}
+                    className="p-2 bg-red-500 text-white rounded-md"
+                  >
                     <FaTrash />
                   </button>
                 )}
               </div>
             ))}
-            <button onClick={handleSaveModules} className="mt-4 px-6 py-2 bg-green-600 text-white rounded-md">
+            <button
+              onClick={handleSaveModules}
+              className="mt-4 px-6 py-2 bg-green-600 text-white rounded-md"
+            >
               Add
             </button>
-            <button onClick={() => setIsModalOpen(false)} className="mt-4 px-6 py-2 bg-red-600 text-white rounded-md ml-2">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="mt-4 px-6 py-2 bg-red-600 text-white rounded-md ml-2"
+            >
               Cancel
             </button>
           </div>

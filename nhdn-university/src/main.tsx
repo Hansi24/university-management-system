@@ -5,6 +5,8 @@ import './index.css'
 import "primereact/resources/themes/lara-light-blue/theme.css";
 import "primereact/resources/primereact.min.css"; 
 import "primeicons/primeicons.css";  
+// import "react-select/dist/react-select.css";
+
 
 
 ReactDOM.createRoot(document.getElementById('root')!).render(

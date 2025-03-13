@@ -31,6 +31,7 @@ const Login: React.FC = () => {
     setSpinnerOpen(true);
     try {
       const response:AppResponse<any> = await AuthService.Login(formData);
+      console.log(response.success)
       if (response.success) {
         showSuccessMessage("User logged in successfully");
         console.log(response.data.token);
@@ -40,6 +41,7 @@ const Login: React.FC = () => {
           navigate("/event-dashboard");
         }
         else if(ROLE_TYPES.ADMIN === Util.getRole()){
+          console.log(Util.getRole());
           navigate("/admin-dashboard");
         }
       } else {

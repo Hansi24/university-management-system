@@ -1,6 +1,7 @@
 import { ObjectId, Types } from "mongoose";
 
 export interface IModule {
+    _id?: string;
     name: string;
     code?: string;
     description?: string;
@@ -16,7 +17,7 @@ export interface ICourse {
     _id?: string;
     name: string;
     code?: string;
-    students?: Types.ObjectId[];
+    // students?: Types.ObjectId[];
     semesters: ISemester[];
     createdAt?: Date;
     updatedAt?: Date;

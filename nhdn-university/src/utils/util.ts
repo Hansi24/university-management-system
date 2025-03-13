@@ -27,7 +27,7 @@ export class Util {
         const role: IUser = jwtDecode(tk);
         localStorage.setItem("role", role.userRole ?? "");
         localStorage.setItem("userId", role.userId ?? "");
-        localStorage.setItem("type", role.type ?? "");
+        localStorage.setItem("userType", role.userType ?? "");
     }
     public static getRole(): string {
         return localStorage.getItem('role') ?? "";
