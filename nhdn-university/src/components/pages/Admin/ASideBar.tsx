@@ -15,7 +15,7 @@ const ASideBar = () => {
       <nav className="flex-grow p-4">
         <ul className="space-y-3">
           <li>
-            <Link to="#" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md">
+            <Link to="/AdminDashboard" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md">
               <Home size={20} /> Dashboard
             </Link>
           </li>
@@ -39,20 +39,13 @@ const ASideBar = () => {
               <Users size={20} /> User Details
             </Link>
           </li>
-
-          <li className="text-gray-400 text-sm mt-4 uppercase px-4">Resources</li>
           <li>
-            <Link to="#" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md">
-              <FileText size={20} /> Request Resources
-            </Link>
-          </li>
-          <li>
-            <Link to="#" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md">
-              <FileText size={20} /> Requested Resources
+            <Link to="/ResourceRequests" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md">
+              <FileText size={20} /> Resources
             </Link>
           </li>
 
-          <li className="text-gray-400 text-sm mt-4 uppercase px-4">Academic</li>
+          {/* <li className="text-gray-400 text-sm mt-4 uppercase px-4">Academic</li>
           <li>
             <Link to="#" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md">
               <BookOpen size={20} /> LearnLog
@@ -62,7 +55,7 @@ const ASideBar = () => {
             <Link to="#" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md">
               <Clipboard size={20} /> Assignments
             </Link>
-          </li>
+          </li> */}
         </ul>
       </nav>
 

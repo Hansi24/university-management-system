@@ -2,42 +2,71 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import campusLogo from '../../../assets/university-logo.png'; 
 import backgroundImage from '../../../assets/background.jpeg';
+import { motion } from 'framer-motion';
 
 const Home: React.FC = () => {
   return (
     <div className="flex flex-col items-center text-center min-h-screen bg-cover bg-center bg-no-repeat p-10 text-white" style={{ backgroundImage: `url(${backgroundImage})` }}>
-      <section className="flex flex-col md:flex-row justify-between items-center mt-5 w-full max-w-5xl bg-black bg-opacity-50 p-6 rounded-lg">
-        <div className="flex-1 p-5">
-          <img src={campusLogo} alt="Campus Logo" className="w-32 mx-auto mb-4" />
-          <h1 className="text-4xl font-bold">Welcome to the Smart Campus Management System</h1>
-          <p className="text-lg text-gray-300 mt-4">
-            Streamlining campus operations with integrated solutions for managing events and academics, enhancing participation, and maximizing resources.
+      {/* University Logo and Name */}
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 1 }}
+        className="flex flex-col items-center mt-5 w-full max-w-5xl bg-gray-900 bg-opacity-70 p-6 rounded-lg shadow-xl border border-gray-700"
+      >
+        <img src={campusLogo} alt="Campus Logo" className="w-40 mb-4" />
+        <h1 className="text-4xl font-bold text-white">NHDN University Of Sri Lanka</h1>
+      </motion.div>
+      
+      {/* Welcome Section */}
+      <motion.section 
+        initial={{ opacity: 0, y: -20 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 1 }}
+        className="flex flex-col md:flex-row justify-between items-center mt-5 w-full max-w-5xl bg-gray-800 p-8 rounded-lg shadow-2xl border border-gray-700"
+      >
+        <div className="flex-1 p-5 text-left">
+          <h1 className="text-5xl font-extrabold text-gray-100">Welcome to Smart Campus</h1>
+          <p className="text-lg text-gray-400 mt-4">
+            Enhancing campus life with innovative event, academic, and resource management solutions.
           </p>
-          <Link to="/login" className="mt-4 inline-block bg-blue-500 hover:bg-blue-600 text-white py-2 px-5 rounded transition">Get Started</Link>
+          <Link to="/login" className="mt-6 inline-block text-white font-bold py-3 px-6 rounded-full transition shadow-lg">Get Started</Link>
         </div>
-      </section>
+      </motion.section>
       
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-8 my-10 w-full max-w-5xl">
-        <div className="bg-white bg-opacity-80 p-6 rounded-lg text-gray-800 shadow-lg">
-          <h2 className="text-2xl font-semibold text-gray-900">Event Management</h2>
-          <p className="mt-2">Organize, manage, and track campus events to foster student and staff engagement. Keep everyone informed with real-time updates and seamless scheduling.</p>
-          <Link to="/events" className="mt-3 inline-block bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded transition">Explore Events</Link>
-        </div>
-        <div className="bg-white bg-opacity-80 p-6 rounded-lg text-gray-800 shadow-lg">
-          <h2 className="text-2xl font-semibold text-gray-900">Academic Management</h2>
-          <p className="mt-2">Manage courses, faculty assignments, student registrations, and track academic performance. Streamline the academic experience for both staff and students.</p>
-          <Link to="/academics" className="mt-3 inline-block bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded transition">Explore Academics</Link>
-        </div>
-        <div className="bg-white bg-opacity-80 p-6 rounded-lg text-gray-800 shadow-lg">
-          <h2 className="text-2xl font-semibold text-gray-900">Resource Allocation</h2>
-          <p className="mt-2">Maximize the use of campus resources such as classrooms, equipment, and faculty time. Efficient allocation ensures smooth operations across both events and academic activities.</p>
-          <Link to="/resources" className="mt-3 inline-block bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded transition">Manage Resources</Link>
-        </div>
-      </section>
+      {/* Feature Cards */}
+      <motion.section 
+        initial={{ opacity: 0 }} 
+        animate={{ opacity: 1 }} 
+        transition={{ delay: 0.5, duration: 1 }}
+        className="grid grid-cols-1 md:grid-cols-3 gap-8 my-12 w-full max-w-5xl"
+      >
+        {[
+          { title: "Event Management", desc: "Organize and track campus events with real-time updates and scheduling.", link: "/events", color: "bg-gradient-to-r from-indigo-500 to-purple-500" },
+          { title: "Academic Management", desc: "Manage courses, faculty assignments, and student registrations seamlessly.", link: "/academics", color: "bg-gradient-to-r from-green-500 to-teal-500" },
+          { title: "Resource Allocation", desc: "Maximize resource utilization across campus with smart allocations.", link: "/resources", color: "bg-gradient-to-r from-red-500 to-yellow-500" }
+        ].map((feature, index) => (
+          <motion.div 
+            key={index}
+            whileHover={{ scale: 1.05 }}
+            className={`p-6 rounded-lg shadow-xl text-white ${feature.color} bg-opacity-90 hover:bg-opacity-100 transition border border-gray-700`}
+          >
+            <h2 className="text-3xl font-semibold">{feature.title}</h2>
+            <p className="mt-3 text-gray-200">{feature.desc}</p>
+            <Link to={feature.link} className="mt-4 inline-block bg-gray-900 text-white font-semibold py-2 px-4 rounded-full shadow-md transition hover:bg-gray-700">Explore</Link>
+          </motion.div>
+        ))}
+      </motion.section>
       
-      <footer className="bg-black bg-opacity-70 text-white py-3 w-full text-center mt-10">
+      {/* Footer */}
+      <motion.footer 
+        initial={{ opacity: 0, y: 20 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 1 }}
+        className="bg-gray-900 text-gray-300 py-4 w-full text-center mt-10 shadow-md border-t border-gray-700"
+      >
         <p className="text-sm">&copy; 2025 Smart Campus Management System. All rights reserved.</p>
-      </footer>
+      </motion.footer>
     </div>
   );
 };
