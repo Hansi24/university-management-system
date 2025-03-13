@@ -14,7 +14,7 @@ const SideBar = () => {
       <nav className="flex-grow p-4">
         <ul className="space-y-2">
           <li>
-            <Link to="/EventBoard" className="block px-4 py-2 hover:bg-gray-700 rounded">
+            <Link to="/event-dashboard" className="block px-4 py-2 hover:bg-gray-700 rounded">
               Dashboard
             </Link>
           </li>

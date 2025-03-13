@@ -19,38 +19,27 @@ const unavailableResources = ["LH2", "Projector", "Bus 1"];
 
 const ResourceAvailability: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedBuilding, setSelectedBuilding] = useState("");
-  const [selectedRoom, setSelectedRoom] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState("");
   const [duration, setDuration] = useState("30");
-  const [showResources, setShowResources] = useState(false);
   const [selectedResource, setSelectedResource] = useState("");
-  const [bookingStatus, setBookingStatus] = useState("");
-  
-  const navigate = useNavigate();
+  const [showPopup, setShowPopup] = useState(false);
+  const [subject, setSubject] = useState("");
+  const [description, setDescription] = useState("");
 
-  const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-    setSelectedBuilding("");
-    setSelectedRoom("");
-    setShowResources(false);
-  };
+  const navigate = useNavigate();
 
   const handleBookResource = () => {
     if (selectedResource && !isUnavailable(selectedResource)) {
-      navigate("/BookResources", {
-        state: {
-          selectedResource,
-          date: date.toLocaleDateString(),
-          time,
-          duration
-        }
-      });
+      setShowPopup(true);
     }
-};
+  };
 
+  const handleSubmitRequest = () => {
+    alert("Resource Requested Successfully!");
+    setShowPopup(false);
+  };
 
   let filteredResources: string[] = [];
   if (selectedCategory) {
@@ -104,7 +93,7 @@ const ResourceAvailability: React.FC = () => {
               <select
                 className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 value={selectedCategory}
-                onChange={(e) => handleCategoryChange(e.target.value)}
+                onChange={(e) => setSelectedCategory(e.target.value)}
               >
                 <option value="">Choose Category</option>
                 {Object.keys(resourceData).map((category) => (
@@ -122,13 +111,8 @@ const ResourceAvailability: React.FC = () => {
                         key={index}
                         className={`border-b ${isUnavailable(resource) ? "bg-red-500 text-white font-bold" : "hover:bg-green-200"}`}
                       >
-                        <td
-                          className="p-3 text-lg cursor-pointer flex items-center"
-                          onClick={() => setSelectedResource(resource)}
-                        >
-                          {selectedResource === resource && (
-                            <span className="mr-2 text-green-500">&#10003;</span>
-                          )}
+                        <td className="p-3 text-lg cursor-pointer flex items-center" onClick={() => setSelectedResource(resource)}>
+                          {selectedResource === resource && <span className="mr-2 text-green-500">✔</span>}
                           {resource}
                         </td>
                         {isUnavailable(resource) && <td className="text-red-500">Unavailable</td>}
@@ -139,26 +123,29 @@ const ResourceAvailability: React.FC = () => {
               </div>
             )}
 
-              {/* Book Resource Button */}
-          <div className="flex justify-center mt-4">
-            <button
-              onClick={handleBookResource}
-              className="text-white bg-blue-500 hover:bg-blue-700 py-2 px-6 rounded-full shadow-lg transition-all duration-300"
-              disabled={!selectedResource || isUnavailable(selectedResource)}
-            >
-              Book Resource
-            </button>
-          </div>
-
-            {bookingStatus && (
-              <div className="mt-4 text-center text-lg font-semibold">
-                {bookingStatus}
-              </div>
-            )}
-
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={handleBookResource}
+                className="text-white bg-blue-500 hover:bg-blue-700 py-2 px-6 rounded-full shadow-lg transition-all duration-300"
+                disabled={!selectedResource || isUnavailable(selectedResource)}
+              >
+                Book Resource
+              </button>
+            </div>
           </div>
         </div>
       </div>
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
+            <h3 className="text-xl font-semibold mb-4">Request Resource</h3>
+            <input type="text" placeholder="Subject" value={subject} onChange={(e) => setSubject(e.target.value)} className="w-full p-3 border rounded-md mb-2" />
+            <textarea placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-3 border rounded-md mb-2"></textarea>
+            <button className="px-4 py-2 bg-green-600 text-white rounded-md" onClick={handleSubmitRequest}>Request</button>
+            <button className="px-4 py-2 bg-red-500 text-white rounded-md ml-2" onClick={() => setShowPopup(false)}>Cancel</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -107,20 +107,6 @@ const CreateContent = () => {
                     onChange={handleChange}
                   />
                 </div>
-
-                <div className="mt-4">
-                  <label className="block text-gray-600 font-semibold flex items-center space-x-2">
-                    <FaEnvelope />
-                    <span>Send Mail</span>
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    className="w-full p-3 border rounded-lg mt-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                    placeholder="Enter email to send notification"
-                    onChange={handleChange}
-                  />
-                </div>
               </>
             )}
 

@@ -23,6 +23,7 @@ import Module from './components/pages/common/Module';
 import ResourceAvailability from './components/pages/common/ResourceAvailability';
 import Semester from './components/pages/common/Semester';
 import EnrollSem from './components/pages/student/EnrollSem';
+import ResourceRequests from './components/pages/Admin/resource/ResourceRequests';
 
 
 const App: React.FC = () => {
@@ -40,6 +41,7 @@ const App: React.FC = () => {
 
                 <Route path="/CreateAssignment" element={<CreateAssignment />} /> 
                 <Route path="/EnrollSem" element={<EnrollSem />} />
+                <Route path="/Home" element={<Home />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/AdminDashboard" element={<ADashboard />} />
                 <Route path="/UserDetails" element={<UserDetails />} />
@@ -52,6 +54,7 @@ const App: React.FC = () => {
                 <Route path="/semester/:id" element={<Semester />} />
                 <Route path="/module/:id" element={<Module />} />
                 <Route path="/BookResources" element={<BookResources />} />
+                <Route path="/ResourceRequests" element={<ResourceRequests />} />
                 
                 {/* Role-Based Protected Routes */}
                 <Route element={<ProtectedRoute allowedRoles={[ROLE_TYPES.LECTURER]}/>}>
