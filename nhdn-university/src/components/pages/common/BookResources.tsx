@@ -1,8 +1,14 @@
-import SideBar from "../../layout/SideBar";
-import TitleBar from "../../layout/TitleBar";
-import { useState, useEffect } from "react";
+// import SideBar from "../../layout/SideBar";
+// import TitleBar from "../../layout/TitleBar";
+import { useState, useEffect, useContext } from "react";
 import { useLocation } from "react-router-dom";
 import backgroundImage from "../../../assets/background.jpeg";
+import { BookingStatus, IResourceBooking } from "../../../models/ResourceBooking";
+import { AppResponse } from "../../../models/Response";
+import { IResource } from "../../../models/Resource";
+import { ResourceService } from "../../../service/resourceService";
+import { CommonContext } from "../../../context/commonContext";
+import { useMessagePopup } from "../../../context/useMessagePopup";
 
 
 const BookResources = () => {
@@ -11,37 +17,31 @@ const BookResources = () => {
 
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
-  const [bookedResources, setBookedResources] = useState<any[]>([]);
+  const [bookedResources, setBookedResources] = useState<IResourceBooking[]>([]);
+  const { setSpinnerOpen } = useContext(CommonContext);
+  const { showErrorMessage, showSuccessMessage } = useMessagePopup()
 
-  // Simulate fetching user bookings from an API or database
+
   useEffect(() => {
-    // Sample data for bookings
-    const sampleBookings = [
-      {
-        title: "Lecture Hall A - Building 1",
-        date: "2023-03-10",
-        time: "9:00 AM - 12:00 PM",
-        status: "pending",
-        description: "This is for a math lecture.",
-      },
-      {
-        title: "A - Ground",
-        date: "2023-03-15",
-        time: "3:00 PM - 6:00 PM",
-        status: "approved",
-        description: "Football match event.",
-      },
-      {
-        title: "Mini Auditorium",
-        date: "2023-03-20",
-        time: "12:00 PM - 3:00 PM",
-        status: "approved",
-        description: "Seminar on AI and ML.",
-      },
-    ];
-
-    setBookedResources(sampleBookings);
-  }, []);
+      // Fetch all resources when the component loads
+      const fetchResources = async () => {
+        try {
+          const response: AppResponse<IResourceBooking[]> = await ResourceService.getBookedResource();
+          if (response.success) {
+            showSuccessMessage("Booked Resources fetched successfully");
+            setBookedResources(response.data);
+          } else {
+            showErrorMessage(response.message || "Failed to fetch booked resources");
+          }
+        } catch (error) {
+          console.error("Error fetching resources:", error);
+          showErrorMessage("An error occurred. Please try again.");
+        } finally {
+          setSpinnerOpen(false);
+        }
+      };
+      fetchResources();
+    }, []);
 
   // Handle request for booking
   const handleSubmit = async () => {
@@ -53,16 +53,16 @@ const BookResources = () => {
   // Handle return resource
   const handleReturn = (index: number) => {
     const updatedResources = bookedResources.map((booking, i) =>
-      i === index ? { ...booking, status: "returned" } : booking
+      i === index ? { ...booking, status: BookingStatus.RETURNED } : booking
     );
     setBookedResources(updatedResources);
   };
 
   return (
     <div className="flex w-full min-h-screen bg-gray-100" style={{ backgroundImage: `url(${backgroundImage})` }}>
-      <SideBar />
+      {/* <SideBar /> */}
       <div className="flex flex-col flex-grow">
-        <TitleBar />
+        {/* <TitleBar /> */}
         <div className="flex-1 p-6">
   
           {/* Booked Resources List */}
@@ -75,16 +75,18 @@ const BookResources = () => {
               <div className="space-y-4">
                 {bookedResources.map((booking, index) => (
                   <div key={index} className="border p-4 rounded-md shadow-md">
-                    <h3 className="text-lg font-semibold text-gray-800">{booking.title}</h3>
-                    <p className="text-gray-600">Date: {booking.date}</p>
-                    <p className="text-gray-600">Time: {booking.time}</p>
+                    <h3 className="text-lg font-semibold text-gray-800">{booking.subject}</h3>
+                    <p className="text-gray-600">StartTime: {booking.startTime}</p>
+                    <p className="text-gray-600">EndTime: {booking.endTime}</p>
                     <p className="text-gray-600">Status: 
                       <span
                         className={`font-semibold ${
-                          booking.status === "pending"
+                          booking.status === BookingStatus.PENDING
                             ? "text-yellow-500"
-                            : booking.status === "approved"
+                            : booking.status === BookingStatus.APPROVED
                             ? "text-green-500"
+                            : booking.status === BookingStatus.REJECTED
+                            ? "text-red-500"
                             : "text-gray-500"
                         }`}
                       >

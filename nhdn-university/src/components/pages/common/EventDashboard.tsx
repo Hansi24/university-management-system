@@ -3,8 +3,8 @@ import { FaChevronLeft, FaChevronRight, FaUserCircle } from "react-icons/fa";
 import { MdEvent, MdLocationOn, MdEmail, MdPhone } from "react-icons/md";
 import backgroundImage from "../../../assets/background.jpeg";
 import campusLogo from "../../../assets/university-logo.png";
-import SideBar from "../../layout/SideBar";
-import TitleBar from "../../layout/TitleBar";
+// import SideBar from "../../layout/SideBar";
+// import TitleBar from "../../layout/TitleBar";
 
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -56,9 +56,9 @@ const EventBoard = () => {
 
   return (
     <div className="flex w-full min-h-screen bg-gray-50" style={{ backgroundImage: `url(${backgroundImage})` }}>
-      <SideBar />
+      {/* <SideBar /> */}
       <div className="flex flex-col flex-grow">
-        <TitleBar />
+        {/* <TitleBar /> */}
         <div className="flex flex-grow p-6 gap-6">
           {/* Main Content */}
           <div className="flex-grow">

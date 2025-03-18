@@ -31,10 +31,8 @@ const Login: React.FC = () => {
     setSpinnerOpen(true);
     try {
       const response:AppResponse<any> = await AuthService.Login(formData);
-      console.log(response.success)
       if (response.success) {
         showSuccessMessage("User logged in successfully");
-        console.log(response.data.token);
         Util.setToken(response.data.token);
         setToken(response.data.token);
         if(ROLE_TYPES.STUDENT === Util.getRole() || ROLE_TYPES.LECTURER === Util.getRole()){

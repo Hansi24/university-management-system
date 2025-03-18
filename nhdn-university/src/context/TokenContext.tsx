@@ -26,9 +26,10 @@ export const TokenProvider: React.FC<TokenProviderProps> = ({ children }) => {
   const clearToken = () => {
     setToken(undefined);
     localStorage.removeItem('token');
-    localStorage.removeItem('role');
+    localStorage.removeItem('UserRole');
     localStorage.removeItem('userId');
     localStorage.removeItem('userType');
+    localStorage.clear();
   };
 
   const setTokenWithExpiry = (tk: string) => {

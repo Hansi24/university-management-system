@@ -16,8 +16,8 @@ import {
 import { IRegisterFormData } from "../../models/RegistraionFormData";
 import { ICourse, IModule } from "../../models/Course";
 import backgroundImage from "../../assets/background.jpeg";
-import ASideBar from "../pages/Admin/ASideBar";
-import TitleBar from "../layout/TitleBar";
+// import ASideBar from "../pages/Admin/ASideBar";
+// import TitleBar from "../layout/TitleBar";
 import { CommonContext } from "../../context/commonContext";
 import { useMessagePopup } from "../../context/useMessagePopup";
 import { AppResponse } from "../../models/Response";
@@ -175,7 +175,7 @@ const Register: React.FC = () => {
   };
 
   const handleSubmit = async (e: FormEvent) => {
-    // e.preventDefault();
+    e.preventDefault();
     setSpinnerOpen(true);
     const formDataToSend = new FormData();
 
@@ -210,6 +210,7 @@ const Register: React.FC = () => {
       );
       if (response.success) {
         showSuccessMessage("Registered successfully");
+        window.location.reload();
       } else {
         showErrorMessage(response.message || "Registration failed");
       }
@@ -227,9 +228,9 @@ const Register: React.FC = () => {
         className="flex w-full min-h-screen bg-gray-50"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       >
-        <ASideBar />
+        {/* <ASideBar /> */}
         <div className="flex flex-col flex-grow">
-          <TitleBar />
+          {/* <TitleBar /> */}
           <div className="container mx-auto py-6 px-4">
             <div className="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg">
               <h2 className="text-2xl font-bold text-center mb-4">

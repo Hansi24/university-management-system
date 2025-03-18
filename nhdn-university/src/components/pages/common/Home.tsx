@@ -30,7 +30,7 @@ const Home: React.FC = () => {
           <p className="text-lg text-gray-400 mt-4">
             Enhancing campus life with innovative event, academic, and resource management solutions.
           </p>
-          <Link to="/login" className="mt-6 inline-block text-white font-bold py-3 px-6 rounded-full transition shadow-lg">Get Started</Link>
+          <Link to="/login" className="mt-6 inline-block text-white font-bold py-3 px-6 rounded-full bg-orange-400 transition shadow-lg">Get Started</Link>
         </div>
       </motion.section>
       

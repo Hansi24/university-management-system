@@ -1,6 +1,6 @@
 import { useState } from "react";
-import TitleBar from "../../../layout/TitleBar";
-import ASideBar from "../ASideBar";
+// import TitleBar from "../../../layout/TitleBar";
+// import ASideBar from "../ASideBar";
 
 interface ResourceRequest {
   id: number;
@@ -38,9 +38,9 @@ export default function ResourceRequests() {
 
   return (
     <div className="flex w-full min-h-screen bg-gray-100">
-      <ASideBar />
+      {/* <ASideBar /> */}
       <div className="flex flex-col flex-grow">
-        <TitleBar />
+        {/* <TitleBar /> */}
         <div className="p-6 bg-gray-100 min-h-screen">
           <h2 className="text-2xl font-bold mb-4">Requested Resources</h2>
           <div className="bg-white p-4 rounded-lg shadow mb-6">

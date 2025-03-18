@@ -1,12 +1,21 @@
-import { Schema, model } from "mongoose";
-import { ISchedule } from "../modal/ISchedule";
+import mongoose, { Schema } from "mongoose";
+import { IDaySchedule, ISchedule } from "../modal/ISchedule";
 
-const scheduleSchema = new Schema<ISchedule>({
-  courseId: { type: Schema.Types.ObjectId, ref: "Course", required: true },
-  lecturerId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  startTime: { type: Date, required: true },
-  endTime: { type: Date, required: true },
-  location: { type: String, required: true }
+const DayScheduleSchema = new Schema<IDaySchedule>({
+  timeSlot: { type: String, required: true },
+  moduleId: { type: Schema.Types.ObjectId, ref: "Module", required: true },
+  lecturerId: { type: Schema.Types.ObjectId, ref: "Lecturer", required: true },
+  location: { type: Schema.Types.ObjectId, ref: "Resource", required: true },
 });
 
-export default model<ISchedule>("Schedule", scheduleSchema);
+const ScheduleSchema = new Schema<ISchedule>({
+  courseId: { type: Schema.Types.ObjectId, ref: "Course", required: true },
+  semester: { type: Number, required: true },
+  days: {
+    type: Map,
+    of: [DayScheduleSchema], 
+    default: {},
+  },
+});
+
+export default mongoose.model<ISchedule>("Schedule", ScheduleSchema);

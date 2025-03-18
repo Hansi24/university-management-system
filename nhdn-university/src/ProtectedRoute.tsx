@@ -9,7 +9,7 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
   const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role") as ROLE_TYPES;
+  const role = localStorage.getItem("UserRole") as ROLE_TYPES;
   const type = localStorage.getItem("userType") as USER_TYPES;
 
   // Redirect to login if the user is not authenticated

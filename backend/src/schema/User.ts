@@ -18,11 +18,10 @@ const userSchema = new Schema<IUser>({
   semester: { 
     type: Number, 
     required: function (this: IUser) { return this.role === Role.STUDENT; }, 
-    default: function (this: IUser) { return this.role === Role.STUDENT ? 1 : undefined; } 
+    default: function (this: IUser) { return this.role === Role.STUDENT ? 1 : undefined; }, 
   },
   enrolledModules: [{
-    moduleId: { type: Schema.Types.ObjectId, ref: "Module" },  
-    status: { type: String, enum: ["PENDING", "APPROVED", "REJECTED"], default: "PENDING" }  
+    moduleId: { type: Schema.Types.ObjectId, ref: "Module" },   
   }],
   teachingModules: [{ 
     type: Schema.Types.ObjectId, 
@@ -46,7 +45,6 @@ const userSchema = new Schema<IUser>({
 
 // Restrict `type` based on `role`
 userSchema.pre("validate", function (next) {
-  console.log("this:", this);  // Add this line to log the full document
   const roleTypeMap: Record<Role, string[]> = {
     [Role.STUDENT]: Object.values(StudentType),
     [Role.LECTURER]: Object.values(LecturerType),

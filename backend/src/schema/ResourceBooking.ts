@@ -7,7 +7,9 @@ const resourceBookingSchema = new Schema<IResourceBooking>({
   resourceId: { type: Schema.Types.ObjectId, ref: "Resource", required: true },
   startTime: { type: Date, required: true },
   endTime: { type: Date, required: true },
-  status: { type: String, enum: Object.values(BookingStatus), default: BookingStatus.PENDING }
+  status: { type: String, enum: Object.values(BookingStatus), default: BookingStatus.PENDING },
+  subject: { type: String, required: true},
+  description: { type: String, required: true},
 });
 
 export default model<IResourceBooking>("ResourceBooking", resourceBookingSchema);

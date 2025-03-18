@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { changePasswordDao, createUser, deleteUserDao, getAllUsersDao, login, resetPasswordDao, updateUserProfile, userDetails } from '../dao/user-dao';
+import { changePasswordDao, createUser, deleteUserDao, getAllUsersDao, getUserByIdDao, getUsersByUserRoleDao, getUsersDao, login, makeRepDao, resetPasswordDao, updateUserProfile, upgradeSemesterDao, userDetails } from '../dao/user-dao';
 import { Util } from '../utils/util';
 import { AdminType, LecturerType, Role, StudentType } from '../enums/UserEnums';
 import { User } from '../schema/User';
@@ -7,11 +7,9 @@ import { IUser } from '../modal/IUser';
 import mongoose, { Types } from 'mongoose';
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    console.log(req.body);
     const { 
         name, email, phone, role, type, batch, courseId, teachingModules, gender, address 
     } = req.body;
-    console.log(role);
     try {
         let profilePic = "";
         let regId = "";
@@ -28,8 +26,6 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
               console.error("Error parsing teachingModules:", error);
             }
           }
-        console.log("--------------------------------")
-        console.log(teachingModuleIds);
         if (req.file) {
             profilePic = (req.file as any).path;
         }
@@ -103,6 +99,15 @@ export const userDetail = async (req: Request, res: Response, next: NextFunction
         next(error);
     }
 };
+export const getUserById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const userId = req.params.userId;
+    try {
+        const credentialDetails = await getUserByIdDao(userId);
+        return Util.sendSuccess(res, credentialDetails, "user login successfully");
+    } catch (error) {
+        next(error);
+    }
+};
 
 export const updateProfile = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const userId = req.user.userId;
@@ -142,6 +147,16 @@ export const getAllUsers = async (req: Request, res: Response, next: NextFunctio
         next(error);
     }
 }
+export const getUsersByUserRole = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const role = req.params.userRole as Role;
+    console.log(role)
+    try {
+        const users = await getUsersByUserRoleDao(role);
+        return Util.sendSuccess(res, users , "users retrieved successfully");
+    } catch (error) {
+        next(error);
+    }
+}
 
 export const changePassword = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const userId = req.user.userId;
@@ -159,6 +174,56 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
     try {
         const credentialDetails = await resetPasswordDao(email, newPassword);
         return Util.sendSuccess(res, credentialDetails, "Password updated successfully");
+    } catch (error) {
+        next(error);
+    }
+}
+export const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const { batch, courseId } = req.params;
+    const userRole = req.user.userRole;
+  try {
+    if(userRole !== Role.ADMIN) {
+        return Util.sendError(res, "You are not authorized to view users", 401);
+    }
+    let query: any = { courseId };
+
+    if (batch) {
+      query.batch = batch;
+      query.role = Role.STUDENT;
+    } else {
+      query.role = Role.LECTURER;
+    }
+    const users = await getUsersDao(query);
+    return Util.sendSuccess(res, users, "Password updated successfully");
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const makeRep = async (req:Request, res:Response, next:NextFunction): Promise<void> => {
+    const userId = req.body.userId;
+    try {
+        if(req.user.userRole!== Role.ADMIN){
+            return Util.sendError(res, "You are not authorized to make a representative", 401);
+        }
+        const user = await makeRepDao(userId);
+        return Util.sendSuccess(res, user , "Representative updated successfully");
+    } catch (error) {
+        next(error);
+    }
+}
+export const upgradeSemester = async (req:Request, res:Response, next:NextFunction): Promise<void> => {
+    const userId = req.params.userId;
+    const semester = req.body.semester;
+    try {
+        if(req.user.userRole!== Role.ADMIN){
+            return Util.sendError(res, "You are not authorized to make a representative", 401);
+        }
+        if (semester >= 5) {
+            return Util.sendError(res, "Maximum semester limit reached (4)", 401);
+        }
+        const user = await upgradeSemesterDao(userId, semester);
+        return Util.sendSuccess(res, user , "Representative updated successfully");
     } catch (error) {
         next(error);
     }

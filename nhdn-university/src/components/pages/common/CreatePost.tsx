@@ -1,8 +1,8 @@
 import React, { useState, ChangeEvent } from "react";
 import { FaCamera, FaTrash } from "react-icons/fa";
 import backgroundImage from "../../../assets/background.jpeg";
-import SideBar from "../../layout/SideBar";
-import TitleBar from "../../layout/TitleBar";
+// import SideBar from "../../layout/SideBar";
+// import TitleBar from "../../layout/TitleBar";
 
 interface Post {
   title: string;
@@ -62,9 +62,9 @@ const CreatePost: React.FC = () => {
 
   return (
     <div className="flex w-full min-h-screen bg-cover text-white" style={{ backgroundImage: `url(${backgroundImage})` }}>
-      <SideBar />
+      {/* <SideBar /> */}
       <div className="flex flex-col flex-grow">
-        <TitleBar />
+        {/* <TitleBar /> */}
         <div className="flex flex-grow justify-center items-center p-6">
           <div className="w-full max-w-lg bg-white p-8 rounded-xl shadow-xl text-black space-y-6">
             <h2 className="text-3xl font-bold text-center text-blue-900">Create a Post</h2>

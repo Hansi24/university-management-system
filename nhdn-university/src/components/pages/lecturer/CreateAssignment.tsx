@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft, FaFileUpload, FaEnvelope, FaCalendarAlt, FaEdit } from "react-icons/fa";
-import SideBar from "../../layout/SideBar";
-import TitleBar from "../../layout/TitleBar";
+// import SideBar from "../../layout/SideBar";
+// import TitleBar from "../../layout/TitleBar";
 import { useState } from "react";
 
 const CreateContent = () => {
@@ -45,9 +45,9 @@ const CreateContent = () => {
 
   return (
     <div className="flex w-full min-h-screen bg-gradient-to-r from-blue-50 to-gray-100">
-      <SideBar />
+      {/* <SideBar /> */}
       <div className="flex flex-col flex-grow">
-        <TitleBar />
+        {/* <TitleBar /> */}
         <div className="m-6">
           <button
             className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300 w-fit"

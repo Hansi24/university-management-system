@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { FaUserGraduate, FaChalkboardTeacher, FaBook, FaTools, FaClock, FaCalendarAlt } from "react-icons/fa";
 import TitleBar from "../../layout/TitleBar";
-import ASideBar from "./ASideBar";
+// import ASideBar from "./ASideBar";
 import { motion } from "framer-motion";
 
 const ADashboard = () => {
@@ -69,9 +69,9 @@ const studentDistribution = [
 
   return (
     <div className="flex w-full min-h-screen bg-gradient-to-r from-purple-100 to-indigo-100">
-      <ASideBar />
+      {/* <ASideBar /> */}
       <div className="flex flex-col flex-grow">
-        <TitleBar />
+        {/* <TitleBar /> */}
         <div className="p-6">
           {/* Date and Time Display */}
           <motion.div 

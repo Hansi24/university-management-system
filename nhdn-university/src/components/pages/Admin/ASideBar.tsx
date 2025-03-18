@@ -35,7 +35,7 @@ const ASideBar = () => {
             </Link>
           </li>
           <li>
-            <Link to="#" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md">
+            <Link to="/TimeTable" className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md">
               <Calendar size={20} /> Time Table
             </Link>
           </li>

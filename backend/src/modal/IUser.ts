@@ -26,15 +26,8 @@ export interface IUser {
 }
 interface EnrolledModule {
   moduleId: Types.ObjectId;
-  status: EnrolledModuleStatus;
 }
 
-export enum EnrolledModuleStatus {
-  PENDING = 'PENDING',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED'
-}
- 
 export interface ILoginUser {
     regId: string;
     password: string;

@@ -25,12 +25,12 @@ export class Util {
         //     Util.role = "";
         // }
         const role: IUser = jwtDecode(tk);
-        localStorage.setItem("role", role.userRole ?? "");
+        localStorage.setItem("UserRole", role.userRole ?? "");
         localStorage.setItem("userId", role.userId ?? "");
         localStorage.setItem("userType", role.userType ?? "");
     }
     public static getRole(): string {
-        return localStorage.getItem('role') ?? "";
+        return localStorage.getItem('UserRole') ?? "";
         // return Util.role;
     }
     
@@ -55,7 +55,6 @@ export class Util {
     public static initAxios(): void {
         
         axios.interceptors.request.use(req => {
-            console.log(this.getToken());
             req.headers.Authorization = 'Bearer ' + this.getToken();
             return req;
         });
