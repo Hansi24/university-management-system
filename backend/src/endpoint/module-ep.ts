@@ -3,7 +3,7 @@ import { createCourseDao } from "../dao/course-dao";
 import { Role, AdminType, LecturerType } from "../enums/UserEnums";
 import { Util } from "../utils/util";
 import { IModuleMaterial } from "../modal/IModuleMaterial";
-import { createMaterialDao, createSubmissionDao, deleteModuleMaterialDao, deleteSubmissionDao, getMaterialByIdDao, getMaterialDao, getSubmissionByAssignmentIdDao, getSubmissionByIdDao, UpdateMaterialDao, updateSubmissionDao } from "../dao/module-dao";
+import { createMaterialDao, createSubmissionDao, deleteModuleMaterialDao, deleteSubmissionDao, getMaterialByIdDao, getMaterialDao, getSubmissionByAssignmentIdDao, getSubmissionByIdDao, hasSubmittedDao, UpdateMaterialDao, updateSubmissionDao } from "../dao/module-dao";
 import { IAssignmentSubmission } from "../modal/IAssignmentSubmission";
 
 export const createMaterial = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -119,6 +119,16 @@ export const getMaterial = async (req: Request, res: Response, next: NextFunctio
     try {
         const materials = await getMaterialDao(moduleId);
         return Util.sendSuccess(res, materials, "module material update successfully");
+    } catch (error) {
+        next(error);
+    }
+};
+export const hasSubmitted = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const { materialId } = req.params;
+    const studentId = req.user.userId; 
+    try {
+        const hasSubmittedStatus = await hasSubmittedDao(materialId,studentId);
+        return Util.sendSuccess(res, hasSubmittedStatus, "module material update successfully");
     } catch (error) {
         next(error);
     }

@@ -37,4 +37,8 @@ export class ModuleService {
         const url = Util.apiUrl(`module/submission/${submissionId}`);
         return await axios.get<Partial<any>, AppResponse<any>>(url);
     }
+    public static async hasStudentSubmitted(materialId:string): Promise<AppResponse<boolean>> {
+        const url = Util.apiUrl(`module/materials/${materialId}/has-submitted`);
+        return await axios.get<Partial<any>, AppResponse<any>>(url);
+    }
 }  

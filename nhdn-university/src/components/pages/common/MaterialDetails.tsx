@@ -19,6 +19,7 @@ const MaterialDetails = () => {
   const [submissionLink, setSubmissionLink] = useState("");
   const [studentSubmissions, setStudentSubmissions] = useState<IAssignmentSubmission[]>([]);
   const userRole = localStorage.getItem("UserRole");
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
   // Fetch material details
   useEffect(() => {
@@ -59,6 +60,23 @@ const MaterialDetails = () => {
     }
   }, [material, materialId, userRole]);
 
+  useEffect(() => {
+    const fetchStudentSubmissionStatus = async () => {
+      try {
+        if (userRole === ROLE_TYPES.STUDENT && materialId) {
+          const response: AppResponse<boolean> = await ModuleService.hasStudentSubmitted(materialId);
+          if (response.success) {
+            setHasSubmitted(response.data);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching student submission status:", error);
+      }
+    };
+  
+    fetchStudentSubmissionStatus();
+  }, [materialId, userRole]);
+
   // Handle edit toggle
   const toggleEdit = () => {
     setIsEditing(!isEditing);
@@ -97,7 +115,7 @@ const MaterialDetails = () => {
         fileUrl: submissionLink,
       };
 
-      const response: AppResponse<any> = await ModuleService.submitAssignment(submissionData);
+      const response: AppResponse<IAssignmentSubmission> = await ModuleService.submitAssignment(submissionData);
       if (response.success) {
         alert("Assignment submitted successfully!");
         setSubmissionLink("");
@@ -209,7 +227,7 @@ const MaterialDetails = () => {
           </div>
 
           {/* Assignment Submission (Visible only for Students) */}
-          {userRole === ROLE_TYPES.STUDENT && material.type === ModuleMaterialType.ASSIGNMENT && (
+          {/* {userRole === ROLE_TYPES.STUDENT && material.type === ModuleMaterialType.ASSIGNMENT && (
             <div className="mt-6">
               <h3 className="text-xl font-semibold text-gray-600">📝 Submit Assignment</h3>
               <input
@@ -222,8 +240,29 @@ const MaterialDetails = () => {
               <button
                 className="flex items-center bg-green-600 text-white px-4 py-2 mt-4 rounded-lg shadow-md hover:bg-green-700 transition-all duration-300 w-fit"
                 onClick={handleSubmitAssignment}
+                disabled={!submissionLink}
               >
                 <FaFileUpload className="mr-2" /> Submit
+              </button>
+            </div>
+          )} */}
+          {userRole === ROLE_TYPES.STUDENT && material.type === ModuleMaterialType.ASSIGNMENT && (
+            <div className="mt-6">
+              <h3 className="text-xl font-semibold text-gray-600">📝 Submit Assignment</h3>
+              <input
+                type="text"
+                placeholder="Enter submission link"
+                value={submissionLink}
+                onChange={(e) => setSubmissionLink(e.target.value)}
+                className={`w-full px-4 py-2 ${hasSubmitted && "hidden"} border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600`}
+                disabled={hasSubmitted}
+              />
+              <button
+                className="flex items-center bg-green-600 text-white px-4 py-2 mt-4 rounded-lg shadow-md hover:bg-green-700 transition-all duration-300 w-fit"
+                onClick={handleSubmitAssignment}
+                disabled={hasSubmitted}
+              >
+                <FaFileUpload className="mr-2" /> {hasSubmitted ? "Submitted" : "Submit"}
               </button>
             </div>
           )}

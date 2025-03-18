@@ -239,3 +239,16 @@ export const getMaterialDao = async (moduleId: string): Promise<IModuleMaterial[
       throw error;
     }
 };
+export const hasSubmittedDao = async (materialId: string, studentId:Types.ObjectId): Promise<Boolean> => {
+    try {
+      const id = new Types.ObjectId(materialId);
+      const submission = await AssignmentSubmission.findOne({
+        assignmentId: id,
+        studentId: studentId,
+      });
+      return !!submission;
+    } catch (error) {
+      console.error("Error deleting Module Material:", error);
+      throw error;
+    }
+};
