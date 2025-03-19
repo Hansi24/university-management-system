@@ -29,6 +29,7 @@ import MaterialDetails from "./components/pages/common/MaterialDetails";
 import SubmissionDetails from "./components/pages/common/SubmissionDetails";
 import AdminResourceRequests from "./components/pages/Admin/resource/AdminResourceRequests";
 import ResourceManagement from "./components/pages/Admin/resource/ResourceManagement";
+import CreateResource from "./components/pages/Admin/resource/CreateResource";
 
 const App: React.FC = () => {
   return (
@@ -103,6 +104,7 @@ const App: React.FC = () => {
                 }} />}>
                   <Route path="/ManageResource" element={<AdminResourceRequests />} />
                   <Route path="/ResourceManagement" element={<ResourceManagement />} />
+                  <Route path="/CreateResource" element={<CreateResource />} />
                 </Route>
 
                 <Route element={<ProtectedRoute allowedRoles={{
