@@ -3,8 +3,10 @@ import { FaEdit, FaTrash } from "react-icons/fa"; // Font Awesome icons
 import { ResourceService } from "../../../../service/resourceService";
 import { IResource, ResourceType } from "../../../../models/Resource";
 import { AppResponse } from "../../../../models/Response";
+import { useNavigate } from "react-router-dom";
 
 const ResourceManagement = () => {
+  const navigate = useNavigate();
   const [resources, setResources] = useState<IResource[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
   const [editingResource, setEditingResource] = useState<IResource | null>(null);
@@ -186,21 +188,22 @@ const ResourceManagement = () => {
       {/* Create New Resource Button */}
       <button
         onClick={() => {
-          setIsModalOpen(true);
+          // setIsModalOpen(true);
           setEditingResource(null);
-          setFormData({
-            name: "",
-            type: ResourceType.CLASSROOM,
-            building: "",
-            floor: 0,
-            code: "",
-            availability: true,
-            vehicleNo: "",
-            count: 0,
-            equipments: "",
-            createdAt: "",
-            updatedAt: "",
-          });
+          // setFormData({
+          //   name: "",
+          //   type: ResourceType.CLASSROOM,
+          //   building: "",
+          //   floor: 0,
+          //   code: "",
+          //   availability: true,
+          //   vehicleNo: "",
+          //   count: 0,
+          //   equipments: "",
+          //   createdAt: "",
+          //   updatedAt: "",
+          // });
+          navigate('/CreateResource')
         }}
         className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition-all duration-300 mb-6"
       >

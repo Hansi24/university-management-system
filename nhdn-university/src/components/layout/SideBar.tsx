@@ -75,8 +75,8 @@ const SideBar = () => {
       </div>
 
       {/* Navigation Menu */}
-      <nav className="flex-grow p-4">
-        <ul className="space-y-3">
+      <nav className="flex-grow p-4 text-md">
+        <ul className="space-y-3 text-[13px]">
           {/* Admin Routes */}
           {role === ROLE_TYPES.ADMIN && (
             <>
@@ -126,6 +126,14 @@ const SideBar = () => {
               )}
               {type === AdminType.RESOURCE && (
                 <>
+                 <li>
+                    <Link
+                      to="/CreateResource"
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md"
+                    >
+                      <FileText size={20} /> New Resource
+                    </Link>
+                  </li>
                   <li>
                   <Link
                     to="/ResourceManagement"
@@ -146,14 +154,7 @@ const SideBar = () => {
                     <FileText size={20} /> Manage Resource
                     </Link>
                   </li>
-                  <li>
-                    <Link
-                      to="/CreateResource"
-                      className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md"
-                    >
-                      <FileText size={20} /> New Resource
-                    </Link>
-                  </li>
+                 
                 </>
               )}
               {type === AdminType.EVENT && (
