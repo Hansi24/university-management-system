@@ -27,6 +27,8 @@ import Unauthorized from "./components/pages/common/Unauthorized";
 import Layout from "./components/layout/Layout";
 import MaterialDetails from "./components/pages/common/MaterialDetails";
 import SubmissionDetails from "./components/pages/common/SubmissionDetails";
+import AdminResourceRequests from "./components/pages/Admin/resource/AdminResourceRequests";
+import ResourceManagement from "./components/pages/Admin/resource/ResourceManagement";
 
 const App: React.FC = () => {
   return (
@@ -34,6 +36,9 @@ const App: React.FC = () => {
       <CommonProvider>
         <ToastProvider>
           <Router>
+            {/* Spinner Component */}
+            <Spinner />
+            
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<Home />} />
@@ -91,6 +96,13 @@ const App: React.FC = () => {
                 }} />}>
                   <Route path="/ResourceAvailability" element={<ResourceAvailability />} />
                   <Route path="/BookResources" element={<BookResources />} />
+                </Route>
+
+                <Route element={<ProtectedRoute allowedRoles={{
+                  [ROLE_TYPES.ADMIN]:[AdminType.RESOURCE] // Full access for Student
+                }} />}>
+                  <Route path="/ManageResource" element={<AdminResourceRequests />} />
+                  <Route path="/ResourceManagement" element={<ResourceManagement />} />
                 </Route>
 
                 <Route element={<ProtectedRoute allowedRoles={{

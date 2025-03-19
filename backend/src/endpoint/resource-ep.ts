@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { Util } from "../utils/util";
 import { IResource } from "../modal/IResource";
-import { createResourceDao, deleteResourceDao, getAllResourcesDao, getAvailableResourcesDao, getBookedResourceDao, getResourceByIdDao, getResourceByTypeDao, resourceBookingDao, updateResourceDao } from "../dao/resource-dao";
+import { createResourceDao, deleteResourceDao, getAllResourcesDao, getAvailableResourcesDao, getBookedResourceDao, getRequestedResourceDao, getResourceByIdDao, getResourceByTypeDao, resourceBookingDao, updateResourceDao, updateResourceStatusDao } from "../dao/resource-dao";
 import { AdminType, Role, StudentType } from "../enums/UserEnums";
 import { promises } from "dns";
 import { IResourceBooking } from "../modal/IResourceBooking";
 import { Types } from "mongoose";
+import { BookingStatus } from "../enums/BookingStatus";
 
 export const createResource = async (req:Request, res:Response, next:NextFunction):Promise<void> => {
     try {
@@ -92,6 +93,27 @@ export const resourceBooking = async (req: Request, res: Response, next: NextFun
         const resourceBooking: IResourceBooking = { ...req.body, userId };
         const booking = await resourceBookingDao(resourceBooking);
         return Util.sendSuccess(res, booking, "Resource booking successful");
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const getRequestedResource = async (req:Request, res:Response, next:NextFunction): Promise<void> => {
+    try {
+        console.log("hellloo")
+        const requestedResources = await getRequestedResourceDao();
+        return Util.sendSuccess(res, requestedResources, "Resources fetched successfully");
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const updateResourceStatus = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { bookedId } = req.params;
+        const { bookingStatus } = req.body;
+        const updatedResource = await updateResourceStatusDao(bookedId, bookingStatus as BookingStatus);
+        return Util.sendSuccess(res, updatedResource, "Resource status updated successfully");
     } catch (error) {
         next(error);
     }

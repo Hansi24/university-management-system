@@ -1,3 +1,5 @@
+import { IResource } from "./Resource";
+
 export enum BookingStatus {
   PENDING = "pending",
   APPROVED = "approved",
@@ -16,7 +18,7 @@ export enum EnrolledModuleStatus {
   export interface IResourceBooking {
     _id: string;
     userId: string;
-    resourceId: string;
+    resourceId: string | IResource;
     startTime: string;
     endTime: string;
     status: BookingStatus;

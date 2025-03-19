@@ -9,7 +9,7 @@ export enum ResourceType {
   }
   
   export interface IResource {
-    _id: string;
+    _id?: string;
     name: string;
     type: ResourceType;
     building?: string;

@@ -127,10 +127,22 @@ const SideBar = () => {
               {type === AdminType.RESOURCE && (
                 <li>
                   <Link
+                    to="/ResourceManagement"
+                    className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md"
+                  >
+                    <FileText size={20} /> Resource
+                  </Link>
+                  <Link
                     to="/ResourceAvailability"
                     className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md"
                   >
-                    <FileText size={20} /> Resource Requests
+                    <FileText size={20} /> Resource Availability
+                  </Link>
+                  <Link
+                    to="/ManageResource"
+                    className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md"
+                  >
+                    <FileText size={20} /> Manage Resource
                   </Link>
                 </li>
               )}

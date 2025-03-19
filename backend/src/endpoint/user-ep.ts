@@ -36,7 +36,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
             if (!batch || !courseId) {
                 return Util.sendError(res, "Batch, Course ID are required for students", 400);
             }
-            const studentCount = await User.countDocuments({ role: Role.STUDENT });
+            const studentCount = await User.countDocuments();
             regId = `NHDN${studentCount + 100}`;
         }
 
@@ -44,7 +44,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
             if (!teachingModules || !courseId) {
                 return Util.sendError(res, "Teaching Modules and Course ID are required for lecturers", 400);
             }
-            const lecturerCount = await User.countDocuments({ role: Role.LECTURER });
+            const lecturerCount = await User.countDocuments();
             regId = `NHDN${lecturerCount + 100}`;
         }
 

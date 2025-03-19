@@ -79,7 +79,7 @@ export const getAvailableResourcesDao = async (startTime: string, endTime: strin
       const bookedResourceIds = new Set(bookings.map((booking) => booking.resourceId.toString()));
   
       // Fetch all resources
-      const allResources = await Resource.find();
+      const allResources = await Resource.find({availability: true});
   
       // Construct the resource availability response
       const updatedResources = allResources.map((resource) => ({
@@ -109,7 +109,11 @@ export const getBookedResourceDao = async (userId: Types.ObjectId): Promise<IRes
         if (!existingUser) {
             throw new Error('User not found');
         }
-        const resources = await ResourceBooking.find({ userId: userId });
+        const resources = await ResourceBooking.find({ userId: userId }).populate({
+            path: "resourceId",
+            select: "name", // Exclude the password field
+        })
+        .exec();
         return resources;
     } catch (error) {
         throw error;
@@ -134,6 +138,29 @@ export const resourceBookingDao = async (resourceBooking: IResourceBooking): Pro
         await newResourceBooking.save();
         await sendResourceBookingRequestEmail(ResourceAdmin.email, existingResource.name,newResourceBooking,existingUser);
         return newResourceBooking;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const getRequestedResourceDao = async (): Promise<IResourceBooking[]> => {
+    try {
+        const requestedResources = await ResourceBooking.find();
+        return requestedResources;
+    } catch (error) {
+        throw error;
+    }
+}
+export const updateResourceStatusDao = async (bookedId:string, bookingStatus:BookingStatus): Promise<IResourceBooking> => {
+    try {
+        const bId = new Types.ObjectId(bookedId);
+        const requestedResource = await ResourceBooking.findById({_id: bId});
+        if (!requestedResource) {
+            throw new Error('Booking not found');
+        }
+        requestedResource.status = bookingStatus;
+        await requestedResource.save();
+        return requestedResource;
     } catch (error) {
         throw error;
     }
