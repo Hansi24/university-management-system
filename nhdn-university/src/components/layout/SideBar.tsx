@@ -124,15 +124,25 @@ const SideBar = () => {
                   </li>
                 </>
               )}
-              {type === AdminType.RESOURCE && (
-                <li>
-                  <Link
-                    to="/ResourceAvailability"
-                    className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md"
-                  >
-                    <FileText size={20} /> Resource Requests
-                  </Link>
-                </li>
+                         {type === AdminType.RESOURCE && (
+                <>
+                  <li>
+                    <Link
+                      to="/ResourceAvailability"
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md"
+                    >
+                      <FileText size={20} /> Resource Requests
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/CreateResource"
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md"
+                    >
+                      <FileText size={20} /> New Resource
+                    </Link>
+                  </li>
+                </>
               )}
               {type === AdminType.EVENT && (
                 <Link
