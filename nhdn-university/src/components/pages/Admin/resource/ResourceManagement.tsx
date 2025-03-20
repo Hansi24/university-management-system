@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FaEdit, FaTrash } from "react-icons/fa"; // Font Awesome icons
+import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa'; // Font Awesome icons
 import { ResourceService } from "../../../../service/resourceService";
 import { IResource, ResourceType } from "../../../../models/Resource";
 import { AppResponse } from "../../../../models/Response";
@@ -182,34 +182,22 @@ const ResourceManagement = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-100 min-h-screen">
-      <h1 className="text-2xl font-bold mb-6">Resource Management</h1>
+    <div className="p-6 bg-gray-100 h-screen">
+      <div className="flex justify-between">
+        <h1 className="text-2xl font-bold mb-6">Resource Management</h1>
 
-      {/* Create New Resource Button */}
-      <button
-        onClick={() => {
-          // setIsModalOpen(true);
-          setEditingResource(null);
-          // setFormData({
-          //   name: "",
-          //   type: ResourceType.CLASSROOM,
-          //   building: "",
-          //   floor: 0,
-          //   code: "",
-          //   availability: true,
-          //   vehicleNo: "",
-          //   count: 0,
-          //   equipments: "",
-          //   createdAt: "",
-          //   updatedAt: "",
-          // });
-          navigate('/CreateResource')
-        }}
-        className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition-all duration-300 mb-6"
-      >
-        Create New Resource
-      </button>
+        {/* Create New Resource Button */}
+        <button
+          onClick={() => { 
+            setEditingResource(null);
+            navigate('/CreateResource')
+          }}
+          className="flex px-4 gap-2 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition-all duration-300 mb-6"
+        >
+         <FaPlus className="mt-1"/> Create Resource 
+        </button>
 
+      </div>
       {/* Resources Table */}
       <div className="bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-xl font-semibold mb-4">Resource List</h2>

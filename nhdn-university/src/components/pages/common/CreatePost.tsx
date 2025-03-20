@@ -1,38 +1,53 @@
-import React, { useState, ChangeEvent } from "react";
+import React, { useState, ChangeEvent, useContext } from "react";
 import { FaCamera, FaTrash } from "react-icons/fa";
 import backgroundImage from "../../../assets/background.jpeg";
-// import SideBar from "../../layout/SideBar";
-// import TitleBar from "../../layout/TitleBar";
-
-interface Post {
-  title: string;
-  description: string;
-  date: string;
-  time: string;
-  venue: string;
-  image: File | null;
-}
+import { AppResponse } from "../../../models/Response";
+import { IEvent, IEventRequest } from "../../../models/Event";
+import { EventService } from '../../../service/eventService';
+import { CommonContext } from "../../../context/commonContext";
+import { useMessagePopup } from "../../../context/useMessagePopup";
 
 const CreatePost: React.FC = () => {
-  const [post, setPost] = useState<Post>({
+  const [post, setPost] = useState<IEventRequest>({
     title: "",
     description: "",
     date: "",
     time: "",
-    venue: "",
-    image: null,
+    location: "",
+    flyer: "",
   });
 
   const [preview, setPreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const { setSpinnerOpen } = useContext(CommonContext);
+  const { showErrorMessage, showSuccessMessage } = useMessagePopup();
 
   const validateForm = () => {
     let tempErrors: { [key: string]: string } = {};
+
+    // Check if title is provided
     if (!post.title) tempErrors.title = "Title is required.";
+
+    // Check if description is provided
     if (!post.description) tempErrors.description = "Description is required.";
-    if (!post.date) tempErrors.date = "Date is required.";
+
+    // Check if date is provided
+    if (!post.date) {
+      tempErrors.date = "Date is required.";
+    } else {
+      // Check if the selected date is in the future
+      const selectedDate = new Date(`${post.date}T${post.time}`);
+      if (selectedDate <= new Date()) {
+        tempErrors.date = "Date and time must be in the future.";
+      }
+    }
+
+    // Check if time is provided
     if (!post.time) tempErrors.time = "Time is required.";
-    if (!post.venue) tempErrors.venue = "Venue is required.";
+
+    // Check if location is provided
+    if (!post.location) tempErrors.location = "Location is required.";
+
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
@@ -44,27 +59,67 @@ const CreatePost: React.FC = () => {
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setPost({ ...post, image: file });
       setPreview(URL.createObjectURL(file));
     }
   };
 
   const removeImage = () => {
-    setPost({ ...post, image: null });
     setPreview(null);
   };
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
     if (!validateForm()) return;
-    console.log("Published Post:", post);
-    alert("Post Published Successfully!");
+    setSpinnerOpen(true);
+  
+    try {
+      // Combine date and time into a single string
+      const dateTimeString = `${post.date}T${post.time}:00`; // Format: YYYY-MM-DDTHH:MM:00
+  
+      // Validate if the selected date and time are in the future
+      const selectedDateTime = new Date(dateTimeString);
+      if (selectedDateTime <= new Date()) {
+        alert("Date and time must be in the future.");
+        return;
+      }
+  
+      // Create a FormData object
+      const formData = new FormData();
+  
+      // Append event data to FormData
+      formData.append("title", post.title);
+      formData.append("description", post.description);
+      formData.append("date", dateTimeString);
+      formData.append("location", post.location);
+  
+      // Append the flyer image if it exists
+      if (preview) {
+        const file = await fetch(preview).then((res) => res.blob());
+        formData.append("flyer", file, "flyer.jpg"); // "flyer" is the field name expected by the backend
+      }
+  
+      // Send the FormData to the backend
+      const response: AppResponse<IEvent> = await EventService.createEvent(formData);
+      console.log("Event created:", response);
+      showSuccessMessage("Event created successfully!");
+    } catch (error) {
+      console.error("Error creating event:", error);
+      showErrorMessage("Failed to create event");
+    } finally {
+      setPost({
+        title: "",
+        description: "",
+        date: "",
+        time: "",
+        location: "",
+        flyer: "",
+      })
+      setSpinnerOpen(false);
+    }
   };
 
   return (
     <div className="flex w-full min-h-screen bg-cover text-white" style={{ backgroundImage: `url(${backgroundImage})` }}>
-      {/* <SideBar /> */}
       <div className="flex flex-col flex-grow">
-        {/* <TitleBar /> */}
         <div className="flex flex-grow justify-center items-center p-6">
           <div className="w-full max-w-lg bg-white p-8 rounded-xl shadow-xl text-black space-y-6">
             <h2 className="text-3xl font-bold text-center text-blue-900">Create a Post</h2>
@@ -106,13 +161,13 @@ const CreatePost: React.FC = () => {
             <div>
               <input
                 type="text"
-                name="venue"
-                placeholder="Event Venue"
-                value={post.venue}
+                name="location"
+                placeholder="Event Location"
+                value={post.location}
                 onChange={handleChange}
                 className="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              {errors.venue && <p className="text-red-500 text-sm mt-1">{errors.venue}</p>}
+              {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
             </div>
 
             <div>

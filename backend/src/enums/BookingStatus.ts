@@ -5,3 +5,9 @@ export enum BookingStatus {
     RETURNED = "returned"
 }
   
+export enum EventStatus {
+    PENDING = "pending",
+    APPROVED = "approved",
+    REJECTED = "rejected",
+}
+  

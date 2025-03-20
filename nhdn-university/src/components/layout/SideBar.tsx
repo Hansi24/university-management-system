@@ -158,12 +158,20 @@ const SideBar = () => {
                 </>
               )}
               {type === AdminType.EVENT && (
+                <li>
                 <Link
                   to="/CreatePost"
                   className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md"
                 >
                   <UserPlus size={20} /> Create Post
                 </Link>
+                <Link
+                  to="/RequestEvent"
+                  className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md"
+                >
+                  <UserPlus size={20} /> Requested Event
+                </Link>
+                </li>
               )}
             </>
           )}

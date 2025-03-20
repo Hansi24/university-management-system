@@ -18,6 +18,7 @@ import { Types } from 'mongoose';
 import courseRoutes from './routes/course-routes';
 import resourceRoutes from './routes/resource-routes';
 import moduleRoutes from './routes/module-routes';
+import eventRoutes from './routes/event-routes';
 // import statusRoutes from './routes/status-routes';
 
 dotenv.config();
@@ -79,6 +80,7 @@ app.use('/api', Helper.verifyToken);
 app.use('/api/course', courseRoutes);
 app.use('/api/resource', resourceRoutes)
 app.use('/api/module', moduleRoutes);
+app.use('/api/event', eventRoutes);
 // app.use('/api/food', foodRoutes);
 // app.use('/api/cart', cartRoutes);
 // app.use('/api/order', orderRoutes);

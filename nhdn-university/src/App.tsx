@@ -30,6 +30,7 @@ import SubmissionDetails from "./components/pages/common/SubmissionDetails";
 import AdminResourceRequests from "./components/pages/Admin/resource/AdminResourceRequests";
 import ResourceManagement from "./components/pages/Admin/resource/ResourceManagement";
 import CreateResource from "./components/pages/Admin/resource/CreateResource";
+import EventRequestAdmin from "./components/pages/Admin/event/EventRequestAdmin";
 
 const App: React.FC = () => {
   return (
@@ -105,6 +106,11 @@ const App: React.FC = () => {
                   <Route path="/ManageResource" element={<AdminResourceRequests />} />
                   <Route path="/ResourceManagement" element={<ResourceManagement />} />
                   <Route path="/CreateResource" element={<CreateResource />} />
+                </Route>
+                <Route element={<ProtectedRoute allowedRoles={{
+                  [ROLE_TYPES.ADMIN]:[AdminType.EVENT] // Full access for Student
+                }} />}>
+                  <Route path="/RequestEvent" element={<EventRequestAdmin />} />
                 </Route>
 
                 <Route element={<ProtectedRoute allowedRoles={{

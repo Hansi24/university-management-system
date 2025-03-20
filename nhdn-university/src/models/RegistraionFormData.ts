@@ -30,7 +30,7 @@ export interface IUsers {
   type: StudentType | LecturerType | AdminType;
   batch?: number; // Only for students
   courseId?: string | ICourse; // For students & lecturers
-  teachingModules?: string[] | IModule[]; // Only for lecturers
+  teachingModules?: string[]; // Only for lecturers
   gender: Gender;
   address: IAddress;
   profilePic?: File | string;
