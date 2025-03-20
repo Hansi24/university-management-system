@@ -1,7 +1,14 @@
 import React from "react";
 import { FaBell, FaComments, FaUserCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const TitleBar: React.FC = () => {
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  const handleProfileClick = () => {
+    navigate("/profile"); // Navigate to the UserProfile page
+  };
+
   return (
     <div className="flex sticky z-[1000] top-0 justify-between items-center px-6 py-4 bg-blue-900 text-white shadow-md w-full h-20">
       {/* Title */}
@@ -15,7 +22,10 @@ const TitleBar: React.FC = () => {
         <button className="text-xl hover:text-gray-300 transition">
           <FaBell title="Notifications" />
         </button>
-        <button className="text-2xl hover:text-gray-300 transition">
+        <button
+          className="text-2xl hover:text-gray-300 transition"
+          onClick={handleProfileClick} // Add onClick handler
+        >
           <FaUserCircle title="Profile" />
         </button>
       </div>

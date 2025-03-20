@@ -31,6 +31,8 @@ import AdminResourceRequests from "./components/pages/Admin/resource/AdminResour
 import ResourceManagement from "./components/pages/Admin/resource/ResourceManagement";
 import CreateResource from "./components/pages/Admin/resource/CreateResource";
 import EventRequestAdmin from "./components/pages/Admin/event/EventRequestAdmin";
+import UserProfile from "./components/pages/common/UserProfile";
+
 
 const App: React.FC = () => {
   return (
@@ -45,6 +47,14 @@ const App: React.FC = () => {
               {/* Public Routes */}
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
+              <Route
+          path="/profile"
+          element={
+            
+              <UserProfile />
+            
+          }
+          />
 
               {/* Role-Based Protected Routes */}
               <Route element={<Layout />}>
