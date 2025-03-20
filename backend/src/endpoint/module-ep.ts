@@ -3,7 +3,7 @@ import { createCourseDao } from "../dao/course-dao";
 import { Role, AdminType, LecturerType } from "../enums/UserEnums";
 import { Util } from "../utils/util";
 import { IModuleMaterial } from "../modal/IModuleMaterial";
-import { createMaterialDao, createSubmissionDao, deleteModuleMaterialDao, deleteSubmissionDao, getMaterialByIdDao, getMaterialDao, getSubmissionByAssignmentIdDao, getSubmissionByIdDao, hasSubmittedDao, UpdateMaterialDao, updateSubmissionDao } from "../dao/module-dao";
+import { createMaterialDao, createSubmissionDao, deleteModuleMaterialDao, deleteSubmissionDao, getLatestAssignmentsForUser, getMaterialByIdDao, getMaterialDao, getSubmissionByAssignmentIdDao, getSubmissionByIdDao, hasSubmittedDao, UpdateMaterialDao, updateSubmissionDao } from "../dao/module-dao";
 import { IAssignmentSubmission } from "../modal/IAssignmentSubmission";
 
 export const createMaterial = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -129,6 +129,18 @@ export const hasSubmitted = async (req: Request, res: Response, next: NextFuncti
     try {
         const hasSubmittedStatus = await hasSubmittedDao(materialId,studentId);
         return Util.sendSuccess(res, hasSubmittedStatus, "module material update successfully");
+    } catch (error) {
+        next(error);
+    }
+};
+export const getLatestAssignments = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const studentId = req.user.userId;
+    try {
+        const latestAssignments = await getLatestAssignmentsForUser(studentId);
+        if (latestAssignments.length === 0) {
+           return Util.sendSuccess(res, latestAssignments , "No assignments found for the user's modules.");
+        }
+        return Util.sendSuccess(res, latestAssignments, "module material update successfully");
     } catch (error) {
         next(error);
     }

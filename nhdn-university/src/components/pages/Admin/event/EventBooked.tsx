@@ -83,7 +83,7 @@ const EventBooked = () => {
   };
 
   return (
-    <div className="flex w-full min-h-screen bg-gray-100" style={{ backgroundImage: `url(${backgroundImage})` }}>
+    <div className="flex w-full h-[682px] overflow-y-auto bg-gray-100" style={{ backgroundImage: `url(${backgroundImage})` }}>
       {/* <SideBar /> */}
       <div className="flex flex-col flex-grow">
         {/* <TitleBar /> */}

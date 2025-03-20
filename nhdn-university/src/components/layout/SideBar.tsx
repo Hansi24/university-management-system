@@ -57,7 +57,7 @@ const SideBar = () => {
   const type = localStorage.getItem("userType");
 
   return (
-    <div className={`${shouldShowSidebar25Percentage ? "w-[15%]" : "w-[30%]"} h-screen sticky top-0 bg-gray-900 text-white shadow-lg flex flex-col`}>
+    <div className={`${shouldShowSidebar25Percentage ? "w-[15%]" : "w-[15%]"} h-screen sticky top-0 bg-gray-900 text-white shadow-lg flex flex-col`}>
       {/* Profile Section */}
       <div className="text-center py-6 border-b border-gray-700">
         <div

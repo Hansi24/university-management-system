@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaBook, FaGraduationCap } from "react-icons/fa";
+import { FaBook, FaGraduationCap, FaTasks } from "react-icons/fa";
 import { AuthService } from "../../../service/authService";
-import { AppResponse } from "../../../models/Response";
+import { AppResponse } from '../../../models/Response';
 import { IUsers } from "../../../models/RegistraionFormData";
 import { ROLE_TYPES } from "../../../enums/roleEnums";
+import { ModuleService } from "../../../service/moduleService";
 
 const LearnLog = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<IUsers>();
+  const [latestAssignments, setLatestAssignments] = useState<{ title: string; dueDate: string }[]>([]);
   const userId = localStorage.getItem("userId");
 
   // Fetch user details (both student & lecturer)
@@ -31,10 +33,28 @@ const LearnLog = () => {
     fetchUserDetails();
   }, [userId]);
 
+  // Fetch latest assignments for the user (if student)
+  useEffect(() => {
+    const fetchLatestAssignments = async () => {
+      if (userId && user?.role === ROLE_TYPES.STUDENT) {
+        try {
+          const assignments:AppResponse<{ title: string; dueDate: string }[]> = await ModuleService.getLatestAssignmentsForUser();
+          if (assignments.success) {
+            setLatestAssignments(assignments.data);
+          }
+        } catch (error) {
+          console.error("Error fetching latest assignments:", error);
+        }
+      }
+    };
+
+    fetchLatestAssignments();
+  }, [userId, user]);
+
   // Helper function to get teaching semesters for lecturers
   const getTeachingSemesters = () => {
     if (!user || !user.courseId || !user.teachingModules) return [];
-    
+
     const semesters = typeof user.courseId === "object" ? user.courseId.semesters : [];
     const teachingModulesSet = new Set(user.teachingModules.map(module => typeof module === "object" ? module._id : module));
 
@@ -66,26 +86,53 @@ const LearnLog = () => {
   };
 
   return (
-    <div className="flex w-full min-h-screen bg-gradient-to-r from-blue-100 to-gray-100">
-      <div className="flex flex-col flex-grow">
-        <div className="bg-gray-300 mx-6 mt-3 p-6 text-lg font-bold rounded-md shadow-md">
-          Notice Board
-        </div>
-
+    <div className="flex w-full h-[682px] bg-gradient-to-r from-blue-100 to-gray-100">
+      <div className="flex flex-col flex-grow p-6">
+        
         {/* Course Name */}
         {user && user.courseId && (
-          <div className="bg-gray-300 mx-6 mt-3 p-6 flex items-center rounded-md shadow-md text-lg font-semibold">
-            <FaGraduationCap className="mr-3 text-blue-700" />
-            {typeof user.courseId === "object" ? user.courseId.name : user.courseId} ({user.batch})
+          <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+            <div className="flex items-center">
+              <FaGraduationCap className="text-2xl text-blue-600 mr-3" />
+              <h2 className="text-xl font-bold text-gray-800">
+                {typeof user.courseId === "object" ? user.courseId.name : user.courseId} ({user.batch})
+              </h2>
+            </div>
           </div>
         )}
+        {/* Notice Board Section */}
+        <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+          <div className="flex items-center mb-4">
+            <FaTasks className="text-2xl text-blue-600 mr-3" />
+            <h2 className="text-xl font-bold text-gray-800">Notice Board</h2>
+          </div>
+          {user?.role === ROLE_TYPES.STUDENT ? (
+            latestAssignments.length > 0 ? (
+              <div className="space-y-4">
+                {latestAssignments.map((assignment, index) => (
+                  <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                    <h3 className="text-lg font-semibold text-blue-700">{assignment.title}</h3>
+                    <p className="text-sm text-gray-600">
+                      Due Date: {new Date(assignment.dueDate).toLocaleString()}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-600">No assignments found.</p>
+            )
+          ) : (
+            <p className="text-gray-600">Welcome to the Notice Board! Here you can find important announcements and updates.</p>
+          )}
+        </div>
+
 
         {/* Semester Buttons */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 p-6 mt-2">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {generateSemesters().map((sem, index) => (
             <button
               key={index}
-              className="bg-white p-6 flex flex-col items-center justify-center rounded-lg shadow-lg hover:bg-blue-200 transition-all duration-300"
+              className="bg-white p-6 flex flex-col items-center justify-center rounded-lg shadow-lg hover:bg-blue-100 transition-all duration-300"
               onClick={() =>
                 navigate(`/semester/${sem.id}`, {
                   state: { courseId: typeof user?.courseId === "object" ? user.courseId._id : undefined },

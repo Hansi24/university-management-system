@@ -41,4 +41,8 @@ export class ModuleService {
         const url = Util.apiUrl(`module/materials/${materialId}/has-submitted`);
         return await axios.get<Partial<any>, AppResponse<any>>(url);
     }
+    public static async getLatestAssignmentsForUser(): Promise<AppResponse<{ title: string; dueDate: string }[]>> {
+        const url = Util.apiUrl(`module/latest-assignments/by-user`);
+        return await axios.get<Partial<any>, AppResponse<any>>(url);
+    }
 }  

@@ -294,7 +294,7 @@ const TimeTable = () => {
   };
 
   return (
-    <div className="flex w-full flex-col flex-grow">
+    <div className="flex w-[1280px] flex-col h-[682px]">
     {/* <TitleBar /> */}
     <form
       onSubmit={handleSubmit(onSubmit)}

@@ -288,3 +288,49 @@ export const hasSubmittedDao = async (materialId: string, studentId:Types.Object
       throw error;
     }
 };
+
+export const getLatestAssignmentsForUser = async (studentId: Types.ObjectId) => {
+  try {
+    const user = await User.findById(studentId).select("enrolledModules");
+    if (!user) {
+      throw new Error("User not found.");
+    }
+
+    // Extract module IDs from the user's enrolledModules array
+    const moduleIds = user.enrolledModules ? user.enrolledModules.map((module) => module.moduleId) : [];
+
+    // Fetch the latest assignments for the user's enrolled modules
+    const latestAssignments = await ModuleMaterial.aggregate([
+      {
+        $match: {
+          moduleId: { $in: moduleIds }, // Filter by the user's enrolled modules
+          type: "ASSIGNMENT", // Filter by assignment type
+        },
+      },
+      {
+        $sort: { createdAt: -1 }, // Sort by createdAt in descending order (latest first)
+      },
+      {
+        $group: {
+          _id: "$moduleId", // Group by moduleId
+          latestAssignment: { $first: "$$ROOT" }, // Get the first document (latest assignment) in each group
+        },
+      },
+      {
+        $project: {
+          _id: 0, // Exclude the _id field
+          title: "$latestAssignment.title", // Include the title
+          dueDate: "$latestAssignment.dueDate", // Include the due date
+        },
+      },
+      {
+        $limit: 2, // Limit the results to the two most recent assignments
+      },
+    ]);
+
+    return latestAssignments;
+  } catch (error) {
+    console.error("Error in getLatestAssignmentsForUser:", error);
+    throw error;
+  }
+};

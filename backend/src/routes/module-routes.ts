@@ -1,6 +1,6 @@
 import express from 'express';
 import { Util } from '../utils/util';
-import { createMaterial, createSubmission, deleteMaterial, deleteSubmission, getMaterial, getMaterialById, getSubmissionByAssignmentId, getSubmissionById, hasSubmitted, updateMaterial, updateSubmission } from '../endpoint/module-ep';
+import { createMaterial, createSubmission, deleteMaterial, deleteSubmission, getLatestAssignments, getMaterial, getMaterialById, getSubmissionByAssignmentId, getSubmissionById, hasSubmitted, updateMaterial, updateSubmission } from '../endpoint/module-ep';
 const router = express.Router();
 
 router.post('/create-material', Util.withErrorHandling(createMaterial));
@@ -14,6 +14,7 @@ router.delete('/:submissionId', Util.withErrorHandling(deleteSubmission));
 router.get('/get-submission-by-assignmentId/:assignmentId', Util.withErrorHandling(getSubmissionByAssignmentId));
 router.get('/get-materials/:moduleId', Util.withErrorHandling(getMaterial));
 router.get("/materials/:materialId/has-submitted", Util.withErrorHandling(hasSubmitted));
+router.get("/latest-assignments/by-user", Util.withErrorHandling(getLatestAssignments));
 
 
 
