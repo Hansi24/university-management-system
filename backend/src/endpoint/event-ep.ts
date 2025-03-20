@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { Util } from "../utils/util";
 import { EventStatus } from "../enums/BookingStatus";
 import { IEvent } from "../modal/IEvent";
-import { createEventDao, getEventByIdDao, getEventByUserDao, getEventsDao, updateEventDao, updateParticipationStatusDao } from "../dao/event-dao";
+import { createEventDao, getAllUpcomingApprovedEventsDao, getEventByIdDao, getEventByUserDao, getEventParticipantsDao, getEventsDao, updateEventDao, updateParticipationStatusDao } from "../dao/event-dao";
 import { EventParticipationStatus } from "../enums/EventStatus";
 
 export const createEvent = async (req: Request,res: Response,next: NextFunction): Promise<void> => {
@@ -39,6 +39,14 @@ export const getEvents = async (req: Request,res: Response,next: NextFunction) =
     next(error);
   }
 };
+export const getAllUpcomingApprovedEvents = async (req: Request,res: Response,next: NextFunction) => {
+  try {
+    const events = await getAllUpcomingApprovedEventsDao();
+    return Util.sendSuccess(res, events, "Events fetched successfully");
+  } catch (error) {
+    next(error);
+  }
+};
 
 export const getEventById = async (req: Request,res: Response,next: NextFunction) => {
     const eventId = req.params.eventId;
@@ -53,6 +61,16 @@ export const getEventByUser = async (req: Request,res: Response,next: NextFuncti
     const userId = req.user.userId;
     try {
         const events = await getEventByUserDao(userId);
+        return Util.sendSuccess(res, events, "Event fetched successfully");
+    } catch (error) {
+        next(error);
+    }
+}
+export const getEventParticipants = async (req: Request,res: Response,next: NextFunction) => {
+    const eventId = req.params.eventId;
+    try {
+        const events = await getEventParticipantsDao(eventId);
+        console.log(events);
         return Util.sendSuccess(res, events, "Event fetched successfully");
     } catch (error) {
         next(error);

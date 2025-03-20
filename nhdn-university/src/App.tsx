@@ -31,6 +31,8 @@ import AdminResourceRequests from "./components/pages/Admin/resource/AdminResour
 import ResourceManagement from "./components/pages/Admin/resource/ResourceManagement";
 import CreateResource from "./components/pages/Admin/resource/CreateResource";
 import EventRequestAdmin from "./components/pages/Admin/event/EventRequestAdmin";
+import EventBooked from "./components/pages/Admin/event/EventBooked";
+import EventDetails from "./components/pages/Admin/event/EventDetails";
 
 const App: React.FC = () => {
   return (
@@ -96,8 +98,14 @@ const App: React.FC = () => {
                   [ROLE_TYPES.STUDENT]: [StudentType.REP],
                   [ROLE_TYPES.ADMIN]:[AdminType.RESOURCE] // Full access for Student
                 }} />}>
-                  <Route path="/ResourceAvailability" element={<ResourceAvailability />} />
                   <Route path="/BookResources" element={<BookResources />} />
+                </Route>
+                <Route element={<ProtectedRoute allowedRoles={{
+                  [ROLE_TYPES.LECTURER]: [], // Full access for Lecturer
+                  [ROLE_TYPES.STUDENT]: [StudentType.REP],
+                  [ROLE_TYPES.ADMIN]:[] // Full access for Student
+                }} />}>
+                  <Route path="/ResourceAvailability" element={<ResourceAvailability />} />
                 </Route>
 
                 <Route element={<ProtectedRoute allowedRoles={{
@@ -111,6 +119,14 @@ const App: React.FC = () => {
                   [ROLE_TYPES.ADMIN]:[AdminType.EVENT] // Full access for Student
                 }} />}>
                   <Route path="/RequestEvent" element={<EventRequestAdmin />} />
+                </Route>
+                <Route element={<ProtectedRoute allowedRoles={{
+                  [ROLE_TYPES.STUDENT]:[StudentType.REP],
+                  [ROLE_TYPES.LECTURER]: [], // Full access for Student
+                  [ROLE_TYPES.ADMIN]:[AdminType.EVENT] 
+                }} />}>
+                  <Route path="/BookedEvent" element={<EventBooked />} />
+                  <Route path="/events/:eventId" element={<EventDetails />} />
                 </Route>
 
                 <Route element={<ProtectedRoute allowedRoles={{

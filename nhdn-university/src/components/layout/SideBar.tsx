@@ -20,6 +20,7 @@ import { useTokenContext } from "../../context/TokenContext";
 import { IUsers } from "../../models/RegistraionFormData";
 import { AuthService } from "../../service/authService";
 import { AppResponse } from "../../models/Response";
+import { FaCalendar, FaCalendarAlt, FaRProject } from "react-icons/fa";
 
 const SideBar = () => {
   const { clearToken } = useTokenContext();
@@ -171,6 +172,18 @@ const SideBar = () => {
                 >
                   <UserPlus size={20} /> Requested Event
                 </Link>
+                <Link
+                    to="/BookedEvent"
+                    className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md"
+                  >
+                    <FaCalendarAlt size={20} /> My Events
+                  </Link>
+                  <Link
+                      to="/ResourceAvailability"
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md"
+                    >
+                      <FileText size={20} /> Resource Availability
+                  </Link>
                 </li>
               )}
             </>
@@ -195,6 +208,12 @@ const SideBar = () => {
                     className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md"
                   >
                     <UserPlus size={20} /> Create Post
+                  </Link>
+                  <Link
+                    to="/BookedEvent"
+                    className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 rounded-md"
+                  >
+                    <FaCalendarAlt size={20} /> My Events
                   </Link>
                 </li>
               )}

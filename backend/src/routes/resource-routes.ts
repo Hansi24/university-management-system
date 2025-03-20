@@ -15,4 +15,5 @@ router.post('/book/resource-booking', Util.withErrorHandling(resourceBooking));
 router.get('/get-booked-resource/:userId', Util.withErrorHandling(getBookedResource));
 router.put('/update-requested-resource-status/status/:bookedId', Util.withErrorHandling(updateResourceStatus));
 
+
 export default router;

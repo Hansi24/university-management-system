@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import { FaChevronLeft, FaChevronRight, FaUserCircle } from "react-icons/fa";
 import { MdEvent, MdLocationOn, MdEmail, MdPhone } from "react-icons/md";
 import backgroundImage from "../../../assets/background.jpeg";
 import campusLogo from "../../../assets/university-logo.png";
-// import SideBar from "../../layout/SideBar";
-// import TitleBar from "../../layout/TitleBar";
+import { IEvent } from "../../../models/Event";
+import { EventService } from "../../../service/eventService";
+import { AppResponse } from "../../../models/Response";
+import { EventParticipationStatus } from "../../../enums/eventStatus";
+import { IEventAttendee } from "../../../models/EventAttendee";
+import { CommonContext } from "../../../context/commonContext";
+import { useMessagePopup } from "../../../context/useMessagePopup";
 
 const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -35,6 +40,12 @@ const generateCalendar = (year: number, month: number) => {
 
 const EventBoard = () => {
   const [date, setDate] = useState(new Date());
+  const [events, setEvents] = useState<IEvent[]>([]); // State to store events
+  const [loading, setLoading] = useState(true); // State to handle loading
+  const [error, setError] = useState<string | null>(null); // State to handle errors
+  const { setSpinnerOpen } = useContext(CommonContext);
+  const { showErrorMessage, showSuccessMessage } = useMessagePopup();
+
   const year = date.getFullYear();
   const month = date.getMonth();
   const calendar = generateCalendar(year, month);
@@ -45,47 +56,100 @@ const EventBoard = () => {
     id: "E123122",
   };
 
-  const post = {
-    author: "S.H.H. Diveshkar",
-    role: "Secretary (Sport Club)",
-    date: "2023-12-06 5:22:09",
-    content:
-      "Get ready for an exciting football match 🎉🔥 Join us as our teams battle it out on the field for glory and bragging rights... see more..",
-    imageUrl: "/mnt/data/image.png",
+  // Fetch upcoming approved events from the backend
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        setLoading(true);
+        const response: AppResponse<IEvent[]> = await EventService.getUpcomingApprovedEvents();
+        if (response.success) {
+          setEvents(response.data);
+        } else {
+          setError(response.message || "Failed to fetch events");
+        }
+      } catch (error) {
+        console.error("Error fetching events:", error);
+        setError("An error occurred. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+  // Handle participation checkbox change
+  const handleParticipationChange = async (eventId: string, isChecked: boolean) => {
+    try {
+      // Determine the participation status based on the checkbox state
+      const participationStatus = isChecked
+        ? EventParticipationStatus.ATTENDING
+        : EventParticipationStatus.NOT_ATTENDING;
+
+      // Call an API to update the participation status
+      const response: AppResponse<IEventAttendee> = await EventService.updateParticipation(eventId, participationStatus);
+      if (response.success) {
+        if (response.data.status === EventParticipationStatus.ATTENDING) {
+          showSuccessMessage("You have successfully registered for the event");
+        } else if (response.data.status === EventParticipationStatus.NOT_ATTENDING) {
+          showSuccessMessage("You have successfully unregistered for the event");
+        }
+      }
+    } catch (error) {
+      console.error("Error updating participation:", error);
+    }
   };
 
+  if (loading) {
+    return <p className="text-center text-gray-500">Loading events...</p>;
+  }
+
+  if (error) {
+    return <p className="text-center text-red-500">{error}</p>;
+  }
+
   return (
-    <div className="flex w-full min-h-screen bg-gray-50" style={{ backgroundImage: `url(${backgroundImage})` }}>
+    <div className="flex w-full h-[682px]  bg-gray-50" style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: "cover", // Ensures the image covers the entire div
+    backgroundPosition: "center"  }}>
       {/* <SideBar /> */}
       <div className="flex flex-col flex-grow">
         {/* <TitleBar /> */}
         <div className="flex flex-grow p-6 gap-6">
           {/* Main Content */}
-          <div className="flex-grow">
-            {/* <div className="w-500 bg-gradient-to-r from-indigo-500 to-blue-200 text-white p-5 rounded-lg shadow-md">
-              <p className="font-semibold text-xl">{userInfo.degree}</p>
-              <p className="flex items-center gap-2 text-lg"><FaUserCircle /> {userInfo.name}</p>
-              <p className="text-sm">ID: {userInfo.id}</p>
-            </div> */}
-
-            <div className="bg-white p-6 scroll-m-0 rounded-lg shadow-md mt-0 h-[450px] overflow-y-auto">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
-                  <div>
-                    <p className="font-semibold text-lg">{post.author}</p>
-                    <p className="text-sm text-gray-500">{post.role}</p>
+          <div className="flex-grow w-[900px]">
+            <div className="bg-white p-6 scroll-m-0 rounded-lg shadow-md mt-0 h-[630px] overflow-y-auto">
+              {events.map((event) => (
+                <div key={event._id} className="bg-white p-5 rounded-lg shadow-md mb-6 border border-gray-300">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
+                      <div>
+                        <p className="font-semibold text-lg text-gray-800">{event.organizerId.name}</p>
+                        <p className="text-sm text-gray-500">{event.organizerId.email}</p>
+                      </div>
+                    </div>
+                    <span className="text-sm text-gray-500">{new Date(event.date).toLocaleString()}</span>
                   </div>
+                  <p className="mb-4 text-gray-700">{event.description}</p>
+                  {event.flyer && (
+                    <img src={event.flyer} alt="Event Flyer" className="w-full rounded-lg shadow-md mb-4" />
+                  )}
+                  {/* Participation Checkbox */}
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      onChange={(e) => event._id && handleParticipationChange(event._id, e.target.checked)}
+                      className="form-checkbox h-5 w-5 text-blue-600 rounded"
+                    />
+                    <span className="text-gray-800 font-medium">Participate</span>
+                  </label>
                 </div>
-                <span className="text-sm text-gray-500">{post.date}</span>
-              </div>
-              <p className="mb-4 text-gray-800">{post.content}</p>
-              <img src={post.imageUrl} alt="Event" className="w-full rounded-lg" />
+              ))}
             </div>
           </div>  
 
           {/* Right Sidebar */}
-          <div className="w-80 h-full bg-white p-4 rounded-lg shadow-md">
+          <div className="h-[630px] bg-white p-4 rounded-lg shadow-md">
             {/* Calendar Section */}
             <div className="">
               <div className="flex justify-between items-center mb-4">

@@ -4,12 +4,17 @@ import { useMessagePopup } from "../../../../context/useMessagePopup";
 import { EventStatus, IEvent } from "../../../../models/Event";
 import { AppResponse } from "../../../../models/Response";
 import { EventService } from "../../../../service/eventService";
+import { useNavigate } from "react-router-dom";
 
 const EventRequestAdmin = () => {
   const [events, setEvents] = useState<IEvent[]>([]);
   const [filter, setFilter] = useState<EventStatus>(EventStatus.PENDING); // Default filter
   const { setSpinnerOpen } = useContext(CommonContext);
   const { showErrorMessage, showSuccessMessage } = useMessagePopup();
+  const navigate = useNavigate();
+  const handleEventClick = (eventId: string) => {
+    navigate(`/events/${eventId}`); // Navigate to the event details page
+  };
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -118,8 +123,8 @@ const EventRequestAdmin = () => {
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {events.map((event, index) => (
-                    <tr key={event._id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 text-sm text-gray-800">{event.title}</td>
+                    <tr key={event._id} className="hover:bg-gray-50 cursor-default">
+                      <td className="px-6 py-4 text-sm text-gray-800 cursor-pointer hover:text-blue-500" onClick={()=> event._id && handleEventClick(event._id)}>{event.title}</td>
                       <td className="px-6 py-4 text-sm text-gray-600">{event.organizerId.name}</td>
                       <td className="px-6 py-4 text-sm text-gray-600">{new Date(event.date).toLocaleDateString()}</td>
                       <td className="px-6 py-4 text-sm text-gray-600"> {new Date(event.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true })}</td>
