@@ -12,7 +12,7 @@ const Layout = () => {
   const shouldShowSidebar = !hideSidebarPaths.includes(location.pathname);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-[100vh]">
       {/* Sidebar */}
       {shouldShowSidebar && <SideBar />}
 

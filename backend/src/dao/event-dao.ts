@@ -3,10 +3,12 @@ import { EventStatus } from "../enums/BookingStatus";
 import { EventParticipationStatus } from "../enums/EventStatus";
 import { AdminType } from "../enums/UserEnums";
 import { IEvent } from "../modal/IEvent";
+import { IEventAttendee } from "../modal/IEventAttendee";
 import Event from "../schema/Event";
 import EventAttendee from "../schema/EventAttendee";
 import { User } from "../schema/User";
 import { ObjectId, Types } from 'mongoose';
+import path from 'path';
 
 export const createEventDao = async (event: IEvent): Promise<IEvent> => {
   try {
@@ -43,6 +45,17 @@ export const getEventsDao = async (filter:EventStatus): Promise<IEvent[]> => {
         throw error;
     }
 };
+export const getAllUpcomingApprovedEventsDao = async (): Promise<IEvent[]> => {
+  try {
+    const events = await Event.find({
+      status: EventStatus.APPROVED, // Filter by approved status
+      date: { $gt: new Date() }, // Filter by upcoming events using the date field
+    }).populate("organizerId", "name email"); // Populate organizer details
+    return events;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const getEventByIdDao = async (eventId: string): Promise<IEvent> => {
     try {
@@ -60,6 +73,26 @@ export const getEventByUserDao = async (userId: Types.ObjectId): Promise<IEvent[
     try {
         const events = await Event.find({organizerId:userId}).populate("organizerId", "name email");
         if (!events) {
+            throw new Error('events not found');
+        }
+        return events;
+    } catch (error) {
+        throw error;
+    }
+};
+export const getEventParticipantsDao = async (eventId: string): Promise<IEventAttendee[]> => {
+    try {
+       const id = new Types.ObjectId(eventId);
+       const events = await EventAttendee.find({ eventId: id })
+       .populate({
+           path: "userId",
+           select: "name email regId batch phone profilePic courseId", // Select fields to populate
+           populate: {
+               path: "courseId", // Populate courseId within User
+               select: "name code", // Select fields to populate from Course
+           },
+       })
+      if (!events) {
             throw new Error('events not found');
         }
         return events;
