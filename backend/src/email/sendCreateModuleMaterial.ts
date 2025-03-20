@@ -31,7 +31,7 @@ export const sendMaterialNotificationEmail = async (material: IModuleMaterial, m
                             <li><strong>Posted on:</strong> ${new Date(material.createdAt).toLocaleString()}</li>
                         </ul>
                         <p>Please review the ${material.type} and complete it before the deadline.</p>
-                        <br>/module/:id/materials/:materialId
+                        <br>
                         <a href="http://localhost:5173/module/${moduleId}/materials/${material._id}" style="color: #4CAF50;">View ${material.type}</a>
                         <br><br>
                         <img src="https://res.cloudinary.com/dzk6bdune/image/upload/v1740579709/360_F_491766294_h4j7LbW2YgfbNHhq7F8GboIc1XyBSEY5_ashwvo.jpg" alt="University Logo" style="width: 150px; height: auto;" />
