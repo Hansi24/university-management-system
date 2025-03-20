@@ -7,6 +7,7 @@ export enum SubmissionStatus {
   }
   
   export interface IAssignmentSubmission {
+    _id?: Types.ObjectId; // Unique identifier for the submission
     assignmentId: Types.ObjectId; // Reference to the Assignment (ModuleMaterial)
     studentId: Types.ObjectId; // Reference to the Student (User)
     fileUrl: string; // URL or path to the submitted file

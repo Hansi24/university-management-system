@@ -6,25 +6,40 @@ import { Role } from "../enums/UserEnums";
 import Course from "../schema/Course";
 import { IAssignmentSubmission, SubmissionStatus } from '../modal/IAssignmentSubmission';
 import { AssignmentSubmission } from "../schema/AssignmentSubmission";
+import { getUserByIdDao } from "./user-dao";
+import { sendSubmissionReceivedEmail } from "../email/sendSubmissionReceivedEmail";
+import { sendMaterialNotificationEmail } from "../email/sendCreateModuleMaterial";
 
 
-export const createMaterialDao = async (material: IModuleMaterial, lecturer:Types.ObjectId): Promise<IModuleMaterial> => {
-    try {
-        const moduleId = new Types.ObjectId(material.moduleId);
-        const existingModule = await Course.findOne({"semesters.modules._id": moduleId});
-        if (!existingModule) {
-            throw new Error("Module does not exist in any course.");
-        }
-        if(!isLecturerAssignedToModule(lecturer, moduleId)){
-            throw new Error("Lecturer is not assigned to this module.");
-        }
-        const newMaterial = new ModuleMaterial(material);
-        await newMaterial.save();
-        return newMaterial;
-    } catch (error) {
-        throw error;
-    }
+export const createMaterialDao = async (material: IModuleMaterial, lecturer: Types.ObjectId): Promise<IModuleMaterial> => {
+  try {
+      const moduleId = new Types.ObjectId(material.moduleId);
+
+      // Check if the module exists in any course
+      const existingModule = await Course.findOne({ "semesters.modules._id": moduleId });
+      if (!existingModule) {
+          throw new Error("Module does not exist in any course.");
+      }
+
+      // Check if the lecturer is assigned to the module
+      if (!isLecturerAssignedToModule(lecturer, moduleId)) {
+          throw new Error("Lecturer is not assigned to this module.");
+      }
+
+      // Create and save the new material
+      const newMaterial = new ModuleMaterial(material);
+      await newMaterial.save();
+
+      // Send email notification to all enrolled users
+      await sendMaterialNotificationEmail(newMaterial, moduleId);
+
+      return newMaterial;
+  } catch (error) {
+      console.error("Error creating material:", error);
+      throw error;
+  }
 };
+
 export const UpdateMaterialDao = async (updates: Partial<IModuleMaterial>, lecturer:Types.ObjectId, materialId: string): Promise<IModuleMaterial> => {
     try {
         const existingMaterialId = new Types.ObjectId(materialId);
@@ -95,26 +110,47 @@ export const getSubmissionByIdDao = async (submissionId: string): Promise<IAssig
     throw error;
   }
 };
-export const createSubmissionDao = async (userId:Types.ObjectId, assignmentId:string, fileUrl:string, status: SubmissionStatus = SubmissionStatus.SUBMITTED): Promise<IAssignmentSubmission> => {
-    try {
-        const id = new Types.ObjectId(assignmentId); 
-        if (await validateSubmission(id)) {
+export const createSubmissionDao = async (
+  userId: Types.ObjectId,
+  assignmentId: string,
+  fileUrl: string,
+  status: SubmissionStatus = SubmissionStatus.SUBMITTED
+): Promise<IAssignmentSubmission> => {
+  try {
+      const id = new Types.ObjectId(assignmentId);
+      if (await validateSubmission(id)) {
           const newSubmission = new AssignmentSubmission({
-            assignmentId: id,
-            studentId: userId,
-            fileUrl,
-            status,
+              assignmentId: id,
+              studentId: userId,
+              fileUrl,
+              status,
           });
-    
+
           await newSubmission.save();
+
+          // Fetch user details (assuming you have a function to get user by ID)
+          const user = await User.findById(userId) // Implement this function
+          if (!user) {
+              throw new Error("User not found.");
+          }
+
+          // Fetch assignment details (assuming you have a function to get assignment by ID)
+          const assignment = await ModuleMaterial.findById(assignmentId); // Implement this function
+          if (!assignment) {
+              throw new Error("Assignment not found.");
+          }
+
+          // Send email to the student
+          await sendSubmissionReceivedEmail(user.email, newSubmission, user, assignment.title);
+
           return newSubmission;
-        } else {
+      } else {
           throw new Error("Submission validation failed.");
-        }
-    } catch (error) {
-        console.error("Error creating Submission:", error);
-        throw error;
-    }
+      }
+  } catch (error) {
+      console.error("Error creating Submission:", error);
+      throw error;
+  }
 };
 
 export const updateSubmissionDao = async (submissionId: string, updates: Partial<IAssignmentSubmission>): Promise<IAssignmentSubmission> => {
