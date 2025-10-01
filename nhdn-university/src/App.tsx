@@ -34,6 +34,8 @@ import EventRequestAdmin from "./components/pages/Admin/event/EventRequestAdmin"
 import UserProfile from "./components/pages/common/UserProfile";
 import EventBooked from "./components/pages/Admin/event/EventBooked";
 import EventDetails from "./components/pages/Admin/event/EventDetails";
+import ChatBox from "./components/pages/common/ChatBox";
+
 
 const App: React.FC = () => {
   return (
@@ -48,14 +50,8 @@ const App: React.FC = () => {
               {/* Public Routes */}
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
-              <Route
-          path="/profile"
-          element={
-            
-              <UserProfile />
-            
-          }
-          />
+              <Route path="/profile"element={ <UserProfile />} />
+              <Route path="/chat"element={ <ChatBox />} />
 
               {/* Role-Based Protected Routes */}
               <Route element={<Layout />}>

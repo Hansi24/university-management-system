@@ -9,6 +9,10 @@ const TitleBar: React.FC = () => {
     navigate("/profile"); // Navigate to the UserProfile page
   };
 
+  const handleChatClick = () => {
+    navigate("/chat"); // Navigate to the ChatBox page
+  };
+
   return (
     <div className="flex sticky z-[1000] top-0 justify-between items-center px-6 py-4 bg-blue-900 text-white shadow-md w-full h-20">
       {/* Title */}
@@ -17,7 +21,7 @@ const TitleBar: React.FC = () => {
       {/* Action Icons: Notifications, Chat, Profile */}
       <div className="flex items-center space-x-6">
         <button className="text-xl hover:text-gray-300 transition">
-          <FaComments title="Chat" />
+          <FaComments title="Chat" onClick={handleChatClick} />
         </button>
         <button className="text-xl hover:text-gray-300 transition">
           <FaBell title="Notifications" />

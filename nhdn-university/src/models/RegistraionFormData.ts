@@ -22,6 +22,7 @@ export interface IRegisterFormData {
   profilePic?: File;
 }
 export interface IUsers {
+  enrolledModules: any;
   _id: string;
   name: string;
   email: string;
