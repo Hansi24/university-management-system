@@ -56,11 +56,13 @@ const LearnLog = () => {
     if (!user || !user.courseId || !user.teachingModules) return [];
 
     const semesters = typeof user.courseId === "object" ? user.courseId.semesters : [];
-    const teachingModulesSet = new Set(user.teachingModules.map(module => typeof module === "object" ? module._id : module));
+    const teachingModulesSet = new Set(user.teachingModules.map((module: { _id: string } | string) => 
+      typeof module === "object" ? module._id : module
+    ));
 
     // Find semesters that contain the lecturer's teaching modules
     return semesters
-      .filter(semester => semester.modules.some(module => teachingModulesSet.has(module._id)))
+      .filter(semester => semester.modules.some(module => module._id && teachingModulesSet.has(module._id)))
       .map(semester => ({
         name: `Semester ${semester.semesterNumber}`,
         id: semester.semesterNumber,
